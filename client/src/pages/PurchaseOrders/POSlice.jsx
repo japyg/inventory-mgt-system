@@ -11,7 +11,7 @@ const initialState = {
       fundCluster: "",
       procMode: "",
       unit: "",
-      article: "",
+      article: [],
       brand: "",
       model: "",
       serialNumber: "",

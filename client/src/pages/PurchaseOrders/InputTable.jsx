@@ -22,8 +22,12 @@ export const InputTable = (props) => {
 
   const [rows, setRows] = useState([{ key: 0, index: 0 }]);
 
-  const handleAddRow = () => {
-    const newRow = { key: rows.length, index: rows.length };
+  const handleAddRow = (newRowData) => {
+    const newRow = {
+      key: rows.length,
+      index: rows.length,
+      articleData: newRowData,
+    };
     setRows([...rows, newRow]);
   };
 
@@ -31,6 +35,12 @@ export const InputTable = (props) => {
     setRows((prevRows) =>
       prevRows.filter((row) => row.index !== indexToDelete)
     );
+  };
+
+  const handleRowArticleChange = (index, newValue) => {
+    const updatedRows = [...rows];
+    updatedRows[index].articleData = newValue;
+    setRows(updatedRows);
   };
 
   return (
@@ -53,10 +63,14 @@ export const InputTable = (props) => {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {rows.map((row, index) => (
               <TableRow
                 key={row.key}
-                index={row.index}
+                index={index}
+                rowData={row}
+                onChangeArticle={(newValue) =>
+                  handleRowArticleChange(index, newValue)
+                }
                 onDelete={handleDeleteRow}
                 openArticleDropdown={props.openArticleDropdown}
                 setOpenArticleDropdown={props.setOpenArticleDropdown}
@@ -100,6 +114,7 @@ export const InputTable = (props) => {
       <ArticleModal
         showArticleModal={props.showArticleModal}
         setShowArticleModal={props.setShowArticleModal}
+        handleAddRow={handleAddRow}
       />
     </>
   );

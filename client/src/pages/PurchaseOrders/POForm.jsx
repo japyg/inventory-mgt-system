@@ -19,7 +19,7 @@ export const POForm = (props) => {
     fundCluster: "fund101",
     procMode: "shopping",
     unit: "",
-    article: "",
+    article: [],
     brand: "",
     model: "",
     serialNumber: "",

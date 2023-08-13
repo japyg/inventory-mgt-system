@@ -4,9 +4,11 @@ import * as IoIcons from "react-icons/io";
 
 export const TableRow = ({
   index,
+  rowData,
   onDelete,
   openArticleDropdown,
   setOpenArticleDropdown,
+  onChangeArticle,
 }) => {
   const handleDeleteRow = () => {
     onDelete(index);
@@ -19,7 +21,12 @@ export const TableRow = ({
           {index + 1}
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap relative">
-          <input className="border-2 h-8 w-full pr-10 pl-3 cursor-pointer" />
+          <input
+            className="border-2 h-8 w-full pr-10 pl-3 cursor-pointer"
+            value={rowData.articleData}
+            onChange={(e) => onChangeArticle(e.target.value)}
+            onFocus={() => setOpenArticleDropdown(!openArticleDropdown)}
+          />
           <i>
             <IoIcons.IoMdArrowDropdown
               className="absolute right-3 top-3 text-2xl cursor-pointer"

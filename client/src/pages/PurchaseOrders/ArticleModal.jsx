@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 import * as AiIcons from "react-icons/ai";
+import { useSelector } from "react-redux";
 
 export const ArticleModal = (props) => {
   const [newArticle, setNewArticle] = useState("");
 
   const handleCloseModal = () => {
+    props.setShowArticleModal(false);
+  };
+  console.log(props);
+  const handleArticleInputChange = (e) => {
+    setNewArticle(e.target.value);
+  };
+
+  const addNewArticle = () => {
+    props.handleAddRow(newArticle);
+    setNewArticle("");
     props.setShowArticleModal(false);
   };
 
@@ -27,12 +38,15 @@ export const ArticleModal = (props) => {
               type="text"
               className="border-2 w-4/5"
               value={newArticle}
-              onChange={(e) => setNewArticle(e.target.value)}
+              onChange={handleArticleInputChange}
               required
             />
           </div>
           <div className="flex justify-center">
-            <button className="border-2 mt-5 px-3 rounded bg-blue-300">
+            <button
+              className="border-2 mt-5 px-3 rounded bg-blue-300"
+              onClick={addNewArticle}
+            >
               Save
             </button>
           </div>
