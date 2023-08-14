@@ -5,8 +5,10 @@ import * as TbIcons from "react-icons/tb";
 import { ArticleModal } from "./ArticleModal";
 
 export const InputTable = (props) => {
-  const [tableData, setTableData] = useState([
+  const [tableRowData, setTableRowData] = useState([
     {
+      key: 0,
+      index: 0,
       article: "",
       description: "",
       brand: "",
@@ -19,28 +21,40 @@ export const InputTable = (props) => {
       totalCost: "",
     },
   ]);
+  console.log(tableRowData.article);
 
-  const [rows, setRows] = useState([{ key: 0, index: 0 }]);
+  const [editingRowIndex, setEditingRowIndex] = useState(-1);
 
   const handleAddRow = (newRowData) => {
     const newRow = {
-      key: rows.length,
-      index: rows.length,
-      articleData: newRowData,
+      key: tableRowData.length,
+      index: tableRowData.length,
+      article: newRowData,
+      description: "",
+      brand: "",
+      model: "",
+      serialNumber: "",
+      unit: "",
+      quantity: "",
+      unitCost: "",
+      amount: "",
+      totalCost: "",
     };
-    setRows([...rows, newRow]);
+    setTableRowData([...tableRowData, newRow]);
   };
 
   const handleDeleteRow = (indexToDelete) => {
-    setRows((prevRows) =>
+    setTableRowData((prevRows) =>
       prevRows.filter((row) => row.index !== indexToDelete)
     );
   };
 
   const handleRowArticleChange = (index, newValue) => {
-    const updatedRows = [...rows];
-    updatedRows[index].articleData = newValue;
-    setRows(updatedRows);
+    setTableRowData((prevRows) => {
+      const updatedRows = [...prevRows]; // Create a copy of the array
+      updatedRows[index] = { ...updatedRows[index], article: newValue }; // Update the specific row
+      return updatedRows; // Return the updated array to setTableRowData
+    });
   };
 
   return (
@@ -63,14 +77,15 @@ export const InputTable = (props) => {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, index) => (
+            {tableRowData.map((row, index) => (
               <TableRow
                 key={row.key}
                 index={index}
-                rowData={row}
+                tableRowData={row}
                 onChangeArticle={(newValue) =>
                   handleRowArticleChange(index, newValue)
                 }
+                setEditingRowIndex={setEditingRowIndex}
                 onDelete={handleDeleteRow}
                 openArticleDropdown={props.openArticleDropdown}
                 setOpenArticleDropdown={props.setOpenArticleDropdown}
@@ -115,6 +130,10 @@ export const InputTable = (props) => {
         showArticleModal={props.showArticleModal}
         setShowArticleModal={props.setShowArticleModal}
         handleAddRow={handleAddRow}
+        onChangeArticle={(newValue) =>
+          handleRowArticleChange(editingRowIndex, newValue)
+        }
+        editingRowIndex={editingRowIndex}
       />
     </>
   );

@@ -20,11 +20,12 @@ export const POForm = (props) => {
     procMode: "shopping",
     unit: "",
     article: [],
-    brand: "",
-    model: "",
-    serialNumber: "",
-    quantity: "",
-    unitCost: "",
+    brand: [],
+    model: [],
+    serialNumber: [],
+    quantity: [],
+    unitCost: [],
+    amount: [],
     totalCost: 0,
   });
 
@@ -472,10 +473,6 @@ export const POForm = (props) => {
         setOpenSupplierDropDown={setOpenSupplierDropDown}
         handleNewSupplierData={handleNewSupplierData}
         setSelectedSupplier={setSelectedSupplier}
-      />
-      <ArticleModal
-        showArticleModal={showArticleModal}
-        setShowArticleModal={setShowArticleModal}
       />
     </div>
   );

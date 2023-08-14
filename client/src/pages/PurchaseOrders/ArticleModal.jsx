@@ -8,13 +8,13 @@ export const ArticleModal = (props) => {
   const handleCloseModal = () => {
     props.setShowArticleModal(false);
   };
-  console.log(props);
+
   const handleArticleInputChange = (e) => {
     setNewArticle(e.target.value);
   };
 
   const addNewArticle = () => {
-    props.handleAddRow(newArticle);
+    props.onChangeArticle(props.editingRowIndex, newArticle);
     setNewArticle("");
     props.setShowArticleModal(false);
   };
