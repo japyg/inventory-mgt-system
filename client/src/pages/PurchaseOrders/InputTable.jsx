@@ -21,7 +21,6 @@ export const InputTable = (props) => {
       totalCost: "",
     },
   ]);
-  console.log(tableRowData.article);
 
   const [editingRowIndex, setEditingRowIndex] = useState(-1);
 
@@ -29,7 +28,7 @@ export const InputTable = (props) => {
     const newRow = {
       key: tableRowData.length,
       index: tableRowData.length,
-      article: newRowData,
+      article: newRowData.length > 0 ? newRowData : "",
       description: "",
       brand: "",
       model: "",
@@ -82,9 +81,7 @@ export const InputTable = (props) => {
                 key={row.key}
                 index={index}
                 tableRowData={row}
-                onChangeArticle={(newValue) =>
-                  handleRowArticleChange(index, newValue)
-                }
+                onChangeArticle={handleRowArticleChange}
                 setEditingRowIndex={setEditingRowIndex}
                 onDelete={handleDeleteRow}
                 openArticleDropdown={props.openArticleDropdown}
@@ -130,9 +127,7 @@ export const InputTable = (props) => {
         showArticleModal={props.showArticleModal}
         setShowArticleModal={props.setShowArticleModal}
         handleAddRow={handleAddRow}
-        onChangeArticle={(newValue) =>
-          handleRowArticleChange(editingRowIndex, newValue)
-        }
+        onChangeArticle={handleRowArticleChange}
         editingRowIndex={editingRowIndex}
       />
     </>

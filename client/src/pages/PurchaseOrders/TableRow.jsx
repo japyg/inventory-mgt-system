@@ -15,8 +15,6 @@ export const TableRow = ({
     onDelete(index);
   };
 
-  console.log("tableRowData:", tableRowData);
-
   return (
     <>
       <tr className="hover:bg-gray-100 hover:shadow-sm">
