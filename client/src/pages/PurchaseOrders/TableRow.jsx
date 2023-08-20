@@ -2,38 +2,32 @@ import React, { useState } from "react";
 import * as BiIcons from "react-icons/bi";
 import * as IoIcons from "react-icons/io";
 
-export const TableRow = ({
-  index,
-  tableRowData,
-  setEditingRowIndex,
-  onDelete,
-  openArticleDropdown,
-  setOpenArticleDropdown,
-  onChangeArticle,
-}) => {
+export const TableRow = (props) => {
   const handleDeleteRow = () => {
-    onDelete(index);
+    props.onDelete(props.index);
   };
 
   return (
     <>
       <tr className="hover:bg-gray-100 hover:shadow-sm">
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap ">
-          {index + 1}
+          {props.index + 1}
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap relative">
           <input
             className="border-2 h-8 w-full pr-10 pl-3 cursor-pointer"
-            value={tableRowData.article}
-            onChange={(e) => onChangeArticle(index, e.target.value)}
-            onFocus={() => setOpenArticleDropdown(!openArticleDropdown)}
+            value={props.tableRowData.article}
+            onChange={(e) => props.onChangeArticle(props.index, e.target.value)}
+            onFocus={() =>
+              props.setOpenArticleDropdown(!props.openArticleDropdown)
+            }
           />
-          <i>
+          <i onClick={() => props.toggleDropdown(props.index)}>
             <IoIcons.IoMdArrowDropdown
               className="absolute right-3 top-3 text-2xl cursor-pointer"
               onClick={() => {
-                setOpenArticleDropdown(!openArticleDropdown);
-                setEditingRowIndex(index);
+                // props.setOpenArticleDropdown(!props.openArticleDropdown);
+                props.setEditingRowIndex(props.index);
               }}
             />
           </i>

@@ -39,7 +39,7 @@ export const POForm = (props) => {
   const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [showArticleModal, setShowArticleModal] = useState(false);
   const [openSupplierDropDown, setOpenSupplierDropDown] = useState(false);
-  const [openArticleDropdown, setOpenArticleDropdown] = useState(false);
+  // const [openArticleDropdown, setOpenArticleDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -361,8 +361,8 @@ export const POForm = (props) => {
           {/* <div className="flex  "> */}
           <div>
             <InputTable
-              openArticleDropdown={openArticleDropdown}
-              setOpenArticleDropdown={setOpenArticleDropdown}
+              // openArticleDropdown={openArticleDropdown}
+              // setOpenArticleDropdown={setOpenArticleDropdown}
               setShowArticleModal={setShowArticleModal}
               showArticleModal={showArticleModal}
             />

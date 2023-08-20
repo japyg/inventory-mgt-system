@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TableRow } from "./TableRow";
 import * as TbIcons from "react-icons/tb";
 import { ArticleModal } from "./ArticleModal";
@@ -23,6 +23,12 @@ export const InputTable = (props) => {
   ]);
 
   const [editingRowIndex, setEditingRowIndex] = useState(-1);
+
+  const initialDropdownState = Array(tableRowData.length).fill(false);
+  const [openArticleDropdown, setOpenArticleDropdown] =
+    useState(initialDropdownState);
+
+  console.log(openArticleDropdown);
 
   const handleAddRow = (newRowData) => {
     const newRow = {
@@ -56,6 +62,14 @@ export const InputTable = (props) => {
     });
   };
 
+  const toggleDropdown = (index) => {
+    setOpenArticleDropdown((prevState) => {
+      const updatedState = [...prevState];
+      updatedState[index] = !updatedState[index];
+      return updatedState;
+    });
+  };
+
   return (
     <>
       <div className="w-full overflow-x-auto">
@@ -86,23 +100,24 @@ export const InputTable = (props) => {
                 onDelete={handleDeleteRow}
                 openArticleDropdown={props.openArticleDropdown}
                 setOpenArticleDropdown={props.setOpenArticleDropdown}
+                toggleDropdown={toggleDropdown}
               />
             ))}
           </tbody>
         </table>
 
-        {props.openArticleDropdown && (
-          <div className="flex justify-start relative">
+        {openArticleDropdown && (
+          <div className={`flex justify-start relative`}>
             <ul
               className={`bg-gray-100 w-48 ml-9 -mt-2 absolute cursor-pointer overflow-y-auto z-10 ${
-                props.openArticleDropdown ? "max-h-60" : "max-h-0"
+                openArticleDropdown ? "max-h-60" : "invisible"
               }`}
             >
               <li
                 className="p-2 text-sm hover:bg-sky-100"
                 onClick={() => {
                   props.setShowArticleModal(true);
-                  props.setOpenArticleDropdown(false);
+                  setOpenArticleDropdown(false);
                 }}
               >
                 Add new item
