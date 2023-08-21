@@ -23,7 +23,6 @@ export const InputTable = (props) => {
   ]);
 
   const [editingRowIndex, setEditingRowIndex] = useState(-1);
-
   const [openArticleDropdown, setOpenArticleDropdown] = useState(
     Array(tableRowData.length).fill(false)
   );
@@ -63,12 +62,10 @@ export const InputTable = (props) => {
   const toggleDropdown = (index) => {
     setOpenArticleDropdown((prevState) => {
       if (!Array.isArray(prevState)) {
-        console.error("prevState is not an array:", prevState);
         return prevState; // Return the original state if it's not an array
       }
 
       const updatedState = [...prevState];
-      console.log("prevState:", prevState);
       updatedState[index] = !updatedState[index];
       return updatedState;
     });

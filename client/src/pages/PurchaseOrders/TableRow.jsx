@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import * as BiIcons from "react-icons/bi";
 import * as IoIcons from "react-icons/io";
 
 export const TableRow = (props) => {
+  const articles = useSelector((state) => state.article.articleInfo);
+
   const handleDeleteRow = () => {
     props.onDelete(props.index);
   };
@@ -36,7 +39,10 @@ export const TableRow = (props) => {
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap ">
           {props.index + 1}
         </td>
-        <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap relative">
+        <td
+          className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap relative"
+          ref={dropdownArticleRef}
+        >
           <input
             className="border-2 h-8 w-full pr-10 pl-3 cursor-pointer"
             value={props.tableRowData.article}
@@ -51,9 +57,12 @@ export const TableRow = (props) => {
               }}
             />
           </i>
-          <div ref={inputArticleRef}>
+          <div>
             {props.openArticleDropdown[props.index] && (
-              <div className={`flex justify-start relative`}>
+              <div
+                className={`flex justify-start relative`}
+                ref={inputArticleRef}
+              >
                 <ul
                   className={`bg-gray-100 w-44 mt-0 fixed cursor-pointer overflow-y-auto z-20 ${
                     props.openArticleDropdown[props.index]
@@ -66,7 +75,6 @@ export const TableRow = (props) => {
                     onClick={() => {
                       props.setShowArticleModal(true);
                       props.toggleDropdown(props.index);
-                      // return false;
                     }}
                   >
                     Add new item

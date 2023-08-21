@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import * as AiIcons from "react-icons/ai";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { addArticle } from "./ArticleSlice";
 
 export const ArticleModal = (props) => {
   const [newArticle, setNewArticle] = useState("");
+  const dispatch = useDispatch();
+  const articles = useSelector((state) => state.article.articleInfo);
 
   const handleCloseModal = () => {
     props.setShowArticleModal(false);
@@ -13,10 +16,22 @@ export const ArticleModal = (props) => {
     setNewArticle(e.target.value);
   };
 
+  const generateArticleId =
+    articles.length > 0
+      ? Number(articles[articles.length - 1].articleId) + 1
+      : 1;
+
   const addNewArticle = () => {
     props.onChangeArticle(props.editingRowIndex, newArticle);
     setNewArticle("");
     props.setShowArticleModal(false);
+
+    dispatch(
+      addArticle({
+        articleId: generateArticleId,
+        articleName: newArticle,
+      })
+    );
   };
 
   if (!props.showArticleModal) return null;
