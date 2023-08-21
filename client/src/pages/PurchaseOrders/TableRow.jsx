@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import * as BiIcons from "react-icons/bi";
 import * as IoIcons from "react-icons/io";
 
@@ -6,6 +6,29 @@ export const TableRow = (props) => {
   const handleDeleteRow = () => {
     props.onDelete(props.index);
   };
+
+  const dropdownArticleRef = useRef(null);
+  const inputArticleRef = useRef(null);
+
+  const handleClickOutsideArticle = (event) => {
+    if (
+      dropdownArticleRef.current &&
+      !dropdownArticleRef.current.contains(event.target)
+    ) {
+      props.setOpenArticleDropdown((prevState) => {
+        const updatedState = [...prevState];
+        updatedState[props.index] = false;
+        return updatedState;
+      });
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutsideArticle);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideArticle);
+    };
+  }, []);
 
   return (
     <>
@@ -18,25 +41,47 @@ export const TableRow = (props) => {
             className="border-2 h-8 w-full pr-10 pl-3 cursor-pointer"
             value={props.tableRowData.article}
             onChange={(e) => props.onChangeArticle(props.index, e.target.value)}
-            onFocus={() =>
-              props.setOpenArticleDropdown(!props.openArticleDropdown)
-            }
+            onClick={() => props.toggleDropdown(props.index)}
           />
           <i onClick={() => props.toggleDropdown(props.index)}>
             <IoIcons.IoMdArrowDropdown
               className="absolute right-3 top-3 text-2xl cursor-pointer"
               onClick={() => {
-                // props.setOpenArticleDropdown(!props.openArticleDropdown);
                 props.setEditingRowIndex(props.index);
               }}
             />
           </i>
+          <div ref={inputArticleRef}>
+            {props.openArticleDropdown[props.index] && (
+              <div className={`flex justify-start relative`}>
+                <ul
+                  className={`bg-gray-100 w-44 mt-0 fixed cursor-pointer overflow-y-auto z-20 ${
+                    props.openArticleDropdown[props.index]
+                      ? "max-h-60"
+                      : "max-h-0 hidden"
+                  }`}
+                >
+                  <li
+                    className="p-2 text-sm hover:bg-sky-100"
+                    onClick={() => {
+                      props.setShowArticleModal(true);
+                      props.toggleDropdown(props.index);
+                      // return false;
+                    }}
+                  >
+                    Add new item
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
         </td>
+
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap flex ">
-          <textarea className="border-2 h-8 resize-none overflow-y-visible" />
+          <textarea className="border-2 h-8 resize-none" />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
-          <input className="border-2 w-full h-8" />
+          <input className="border-2 w-full h-8 resize-none" />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
           <input className="border-2 h-8 w-full" />

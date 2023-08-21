@@ -24,11 +24,9 @@ export const InputTable = (props) => {
 
   const [editingRowIndex, setEditingRowIndex] = useState(-1);
 
-  const initialDropdownState = Array(tableRowData.length).fill(false);
-  const [openArticleDropdown, setOpenArticleDropdown] =
-    useState(initialDropdownState);
-
-  console.log(openArticleDropdown);
+  const [openArticleDropdown, setOpenArticleDropdown] = useState(
+    Array(tableRowData.length).fill(false)
+  );
 
   const handleAddRow = (newRowData) => {
     const newRow = {
@@ -64,7 +62,13 @@ export const InputTable = (props) => {
 
   const toggleDropdown = (index) => {
     setOpenArticleDropdown((prevState) => {
+      if (!Array.isArray(prevState)) {
+        console.error("prevState is not an array:", prevState);
+        return prevState; // Return the original state if it's not an array
+      }
+
       const updatedState = [...prevState];
+      console.log("prevState:", prevState);
       updatedState[index] = !updatedState[index];
       return updatedState;
     });
@@ -98,33 +102,15 @@ export const InputTable = (props) => {
                 onChangeArticle={handleRowArticleChange}
                 setEditingRowIndex={setEditingRowIndex}
                 onDelete={handleDeleteRow}
-                openArticleDropdown={props.openArticleDropdown}
-                setOpenArticleDropdown={props.setOpenArticleDropdown}
+                openArticleDropdown={openArticleDropdown}
+                setOpenArticleDropdown={setOpenArticleDropdown}
                 toggleDropdown={toggleDropdown}
+                editingRowIndex={editingRowIndex}
+                setShowArticleModal={props.setShowArticleModal}
               />
             ))}
           </tbody>
         </table>
-
-        {openArticleDropdown && (
-          <div className={`flex justify-start relative`}>
-            <ul
-              className={`bg-gray-100 w-48 ml-9 -mt-2 absolute cursor-pointer overflow-y-auto z-10 ${
-                openArticleDropdown ? "max-h-60" : "invisible"
-              }`}
-            >
-              <li
-                className="p-2 text-sm hover:bg-sky-100"
-                onClick={() => {
-                  props.setShowArticleModal(true);
-                  setOpenArticleDropdown(false);
-                }}
-              >
-                Add new item
-              </li>
-            </ul>
-          </div>
-        )}
 
         <div className="flex justify-between mt-7 ">
           <button className="ml-2 border-2 rounded px-4" onClick={handleAddRow}>

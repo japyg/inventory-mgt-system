@@ -9,7 +9,6 @@ import { fetchSuppliers } from "../Suppliers/SupplierSlice";
 import { addPurchaseOrder } from "./POSlice";
 import Axios from "axios";
 import { InputTable } from "./InputTable";
-import { ArticleModal } from "./ArticleModal";
 
 export const POForm = (props) => {
   //PO Form States
@@ -39,7 +38,6 @@ export const POForm = (props) => {
   const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [showArticleModal, setShowArticleModal] = useState(false);
   const [openSupplierDropDown, setOpenSupplierDropDown] = useState(false);
-  // const [openArticleDropdown, setOpenArticleDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const inputRef = useRef(null);
 
