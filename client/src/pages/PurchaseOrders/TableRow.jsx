@@ -5,7 +5,7 @@ import * as IoIcons from "react-icons/io";
 
 export const TableRow = (props) => {
   const articles = useSelector((state) => state.article.articleInfo);
-
+  console.log(articles);
   const handleDeleteRow = () => {
     props.onDelete(props.index);
   };
@@ -35,7 +35,7 @@ export const TableRow = (props) => {
 
   return (
     <>
-      <tr className="hover:bg-gray-100 hover:shadow-sm">
+      <tr className="hover:bg-gray-100 hover:shadow-sm ">
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap ">
           {props.index + 1}
         </td>
@@ -47,7 +47,10 @@ export const TableRow = (props) => {
             className="border-2 h-8 w-full pr-10 pl-3 cursor-pointer"
             value={props.tableRowData.article}
             onChange={(e) => props.onChangeArticle(props.index, e.target.value)}
-            onClick={() => props.toggleDropdown(props.index)}
+            onClick={() => {
+              props.toggleDropdown(props.index);
+              props.setEditingRowIndex(props.index);
+            }}
           />
           <i onClick={() => props.toggleDropdown(props.index)}>
             <IoIcons.IoMdArrowDropdown
@@ -64,14 +67,14 @@ export const TableRow = (props) => {
                 ref={inputArticleRef}
               >
                 <ul
-                  className={`bg-gray-100 w-44 mt-0 fixed cursor-pointer overflow-y-auto z-20 ${
+                  className={`bg-gray-100 w-44 mt-0 fixed cursor-pointer overflow-y-scroll z-20 ${
                     props.openArticleDropdown[props.index]
                       ? "max-h-60"
                       : "max-h-0 hidden"
                   }`}
                 >
                   <li
-                    className="p-2 text-sm hover:bg-sky-100"
+                    className="ml-2 pt-2 text-sm hover:bg-sky-100"
                     onClick={() => {
                       props.setShowArticleModal(true);
                       props.toggleDropdown(props.index);
@@ -79,6 +82,16 @@ export const TableRow = (props) => {
                   >
                     Add new item
                   </li>
+                  {articles.map((article, index) => {
+                    return (
+                      <li
+                        key={index}
+                        className="ml-2 pt-2 text-sm hover:bg-sky-100"
+                      >
+                        {article.articleName}
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             )}

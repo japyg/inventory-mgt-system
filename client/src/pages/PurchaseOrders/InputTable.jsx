@@ -73,9 +73,9 @@ export const InputTable = (props) => {
 
   return (
     <>
-      <div className="w-full overflow-x-auto">
-        <table className="table-auto border-collapse w-full">
-          <thead>
+      <div className="w-full overflow-x-auto h-80">
+        <table className="table-auto border-collapse w-full ">
+          <thead className="sticky top-0 z-10">
             <tr className="bg-blue-100 text-xs">
               <th className="p-2 border">#</th>
               <th className="p-2 border">ARTICLE</th>
