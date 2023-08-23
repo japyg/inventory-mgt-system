@@ -12,10 +12,6 @@ export const ArticleModal = (props) => {
     props.setShowArticleModal(false);
   };
 
-  const handleArticleInputChange = (e) => {
-    setNewArticle(e.target.value);
-  };
-
   const generateArticleId =
     articles.length > 0
       ? Number(articles[articles.length - 1].articleId) + 1
@@ -32,12 +28,13 @@ export const ArticleModal = (props) => {
         articleName: newArticle,
       })
     );
+    props.setArticleSearchQuery(newArticle);
   };
 
   if (!props.showArticleModal) return null;
   return (
     <div>
-      <div className="border-2 fixed inset-0 backdrop-brightness-50 backdrop-contrast-125 flex justify-center items-center">
+      <div className="border-2 fixed inset-0 backdrop-brightness-50 backdrop-contrast-125 flex justify-center items-center z-20">
         <div className="border-2 w-2/6 h-40 bg-white">
           <div className="flex justify-end">
             <AiIcons.AiOutlineClose
@@ -53,7 +50,7 @@ export const ArticleModal = (props) => {
               type="text"
               className="border-2 w-4/5"
               value={newArticle}
-              onChange={handleArticleInputChange}
+              onChange={(e) => setNewArticle(e.target.value)}
               required
             />
           </div>

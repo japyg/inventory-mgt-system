@@ -27,6 +27,13 @@ export const InputTable = (props) => {
     Array(tableRowData.length).fill(false)
   );
 
+  const [selectedArticle, setSelectedArticle] = useState(
+    Array(tableRowData.length).fill({})
+  );
+  const [articleSearchQuery, setArticleSearchQuery] = useState(
+    Array(tableRowData.length).fill("")
+  );
+
   const handleAddRow = (newRowData) => {
     const newRow = {
       key: tableRowData.length,
@@ -104,6 +111,10 @@ export const InputTable = (props) => {
                 toggleDropdown={toggleDropdown}
                 editingRowIndex={editingRowIndex}
                 setShowArticleModal={props.setShowArticleModal}
+                selectedArticle={selectedArticle}
+                setSelectedArticle={setSelectedArticle}
+                articleSearchQuery={articleSearchQuery}
+                setArticleSearchQuery={setArticleSearchQuery}
               />
             ))}
           </tbody>
@@ -127,6 +138,8 @@ export const InputTable = (props) => {
         handleAddRow={handleAddRow}
         onChangeArticle={handleRowArticleChange}
         editingRowIndex={editingRowIndex}
+        articleSearchQuery={articleSearchQuery}
+        setArticleSearchQuery={setArticleSearchQuery}
       />
     </>
   );

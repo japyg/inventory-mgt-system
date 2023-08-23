@@ -5,7 +5,40 @@ import * as IoIcons from "react-icons/io";
 
 export const TableRow = (props) => {
   const articles = useSelector((state) => state.article.articleInfo);
-  console.log(articles);
+
+  // const handleRowArticleChange = (index, newValue) => {
+  //   setTableRowData((prevRows) => {
+  //     const updatedRows = [...prevRows]; // Create a copy of the array
+  //     updatedRows[index] = { ...updatedRows[index], article: newValue }; // Update the specific row
+  //     return updatedRows; // Return the updated array to setTableRowData
+  //   });
+  // };
+
+  const handleSelectedArticle = (article) => {
+    props.setSelectedArticle((prevSelected) => {
+      const updatedSelected = [...prevSelected];
+      updatedSelected[props.index] = article;
+      return updatedSelected;
+    });
+    props.toggleDropdown(props.index);
+  };
+
+  const handleArticleInputChange = (index, e) => {
+    const inputValue = e.target.value;
+
+    props.setArticleSearchQuery((prevSearch) => {
+      updatedSearch = [...prevSearch];
+      updatedSearch[index] = inputValue;
+      return updatedSearch;
+    });
+
+    props.setSelectedArticle((prevSelected) => {
+      const updatedSelected = [...prevSelected];
+      updatedSelected[index] = null;
+      return updatedSelected;
+    });
+  };
+
   const handleDeleteRow = () => {
     props.onDelete(props.index);
   };
@@ -45,8 +78,9 @@ export const TableRow = (props) => {
         >
           <input
             className="border-2 h-8 w-full pr-10 pl-3 cursor-pointer"
-            value={props.tableRowData.article}
-            onChange={(e) => props.onChangeArticle(props.index, e.target.value)}
+            value={props.articleSearchQuery[props.index] || ""}
+            // onChange={(e) => props.onChangeArticle(props.index, e.target.value)}
+            onChange={(e) => handleArticleInputChange(props.index)}
             onClick={() => {
               props.toggleDropdown(props.index);
               props.setEditingRowIndex(props.index);
@@ -82,11 +116,12 @@ export const TableRow = (props) => {
                   >
                     Add new item
                   </li>
-                  {articles.map((article, index) => {
+                  {articles.map((article) => {
                     return (
                       <li
-                        key={index}
+                        key={article.articleId}
                         className="ml-2 pt-2 text-sm hover:bg-sky-100"
+                        onClick={() => handleSelectedArticle(article)}
                       >
                         {article.articleName}
                       </li>
