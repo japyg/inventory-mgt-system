@@ -28,7 +28,11 @@ export const ArticleModal = (props) => {
         articleName: newArticle,
       })
     );
-    props.setArticleSearchQuery(newArticle);
+    props.setArticleSearchQuery((prevSearch) => {
+      const updatedSearch = [...prevSearch];
+      updatedSearch[props.editingRowIndex] = newArticle;
+      return updatedSearch;
+    });
   };
 
   if (!props.showArticleModal) return null;

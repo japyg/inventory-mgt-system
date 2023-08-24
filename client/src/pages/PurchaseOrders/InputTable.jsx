@@ -9,7 +9,7 @@ export const InputTable = (props) => {
     {
       key: 0,
       index: 0,
-      article: "",
+      article: [],
       description: "",
       brand: "",
       model: "",

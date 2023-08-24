@@ -6,20 +6,19 @@ import * as IoIcons from "react-icons/io";
 export const TableRow = (props) => {
   const articles = useSelector((state) => state.article.articleInfo);
 
-  // const handleRowArticleChange = (index, newValue) => {
-  //   setTableRowData((prevRows) => {
-  //     const updatedRows = [...prevRows]; // Create a copy of the array
-  //     updatedRows[index] = { ...updatedRows[index], article: newValue }; // Update the specific row
-  //     return updatedRows; // Return the updated array to setTableRowData
-  //   });
-  // };
-
   const handleSelectedArticle = (article) => {
     props.setSelectedArticle((prevSelected) => {
       const updatedSelected = [...prevSelected];
       updatedSelected[props.index] = article;
       return updatedSelected;
     });
+
+    props.setArticleSearchQuery((prevSearch) => {
+      const updatedSearch = [...prevSearch];
+      updatedSearch[props.index] = article.articleName;
+      return updatedSearch;
+    });
+
     props.toggleDropdown(props.index);
   };
 
@@ -27,7 +26,7 @@ export const TableRow = (props) => {
     const inputValue = e.target.value;
 
     props.setArticleSearchQuery((prevSearch) => {
-      updatedSearch = [...prevSearch];
+      const updatedSearch = [...prevSearch];
       updatedSearch[index] = inputValue;
       return updatedSearch;
     });
@@ -79,14 +78,13 @@ export const TableRow = (props) => {
           <input
             className="border-2 h-8 w-full pr-10 pl-3 cursor-pointer"
             value={props.articleSearchQuery[props.index] || ""}
-            // onChange={(e) => props.onChangeArticle(props.index, e.target.value)}
-            onChange={(e) => handleArticleInputChange(props.index)}
+            onChange={(e) => handleArticleInputChange(props.index, e)}
             onClick={() => {
               props.toggleDropdown(props.index);
               props.setEditingRowIndex(props.index);
             }}
           />
-          <i onClick={() => props.toggleDropdown(props.index)}>
+          <i onClick={(e) => props.toggleDropdown(props.index, e)}>
             <IoIcons.IoMdArrowDropdown
               className="absolute right-3 top-3 text-2xl cursor-pointer"
               onClick={() => {
