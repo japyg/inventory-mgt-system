@@ -38,34 +38,7 @@ export const POTable = () => {
       header: "Procurement Mode",
       accessorKey: "procMode",
     },
-    {
-      header: "Unit",
-      accessorKey: "unit",
-    },
-    {
-      header: "Article",
-      accessorKey: "article",
-    },
-    {
-      header: "Brand",
-      accessorKey: "brand",
-    },
-    {
-      header: "Model",
-      accessorKey: "model",
-    },
-    {
-      header: "Serial Number",
-      accessorKey: "serialNumber",
-    },
-    {
-      header: "Quantity",
-      accessorKey: "quantity",
-    },
-    {
-      header: "Unit Cost",
-      accessorKey: "unitCost",
-    },
+
     {
       header: "Total Cost",
       accessorKey: "totalCost",

@@ -86,7 +86,7 @@ export const SuppliersModal = (props) => {
           props.onClose();
           props.setOpenDropDown(false);
         }}
-        className="border-2 fixed inset-0 backdrop-brightness-50 backdrop-contrast-125 flex justify-center items-center"
+        className="border-2 fixed inset-0 backdrop-brightness-50 backdrop-contrast-125 flex justify-center items-center z-20"
       >
         <div className="border-2 w-2/5 max-h-max bg-white">
           <div className="flex justify-end">

@@ -5,7 +5,7 @@ import * as IoIcons from "react-icons/io";
 
 export const TableRow = (props) => {
   const articles = useSelector((state) => state.article.articleInfo);
-
+  // console.log(articles);
   const handleSelectedArticle = (article) => {
     props.setSelectedArticle((prevSelected) => {
       const updatedSelected = [...prevSelected];
@@ -37,6 +37,21 @@ export const TableRow = (props) => {
       return updatedSelected;
     });
   };
+
+  const filteredArticles = articles.filter((article) => {
+    const searchQueries = props.articleSearchQuery || [];
+
+    return (
+      searchQueries.length === 0 || // If no search queries are provided, return true for all articles
+      searchQueries.some((query) =>
+        article.articleName.toLowerCase().includes(query.toLowerCase())
+      )
+    );
+  });
+
+  const sortedArticles = filteredArticles.sort((a, b) => {
+    return a.articleName.localeCompare(b.articleName);
+  });
 
   const handleDeleteRow = () => {
     props.onDelete(props.index);
@@ -114,7 +129,7 @@ export const TableRow = (props) => {
                   >
                     Add new item
                   </li>
-                  {articles.map((article) => {
+                  {sortedArticles.map((article) => {
                     return (
                       <li
                         key={article.articleId}

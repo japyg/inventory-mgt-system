@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import * as AiIcons from "react-icons/ai";
 import { useSelector, useDispatch } from "react-redux";
 import { addArticle } from "./ArticleSlice";
+import Axios from "axios";
 
 export const ArticleModal = (props) => {
   const [newArticle, setNewArticle] = useState("");
@@ -32,6 +33,13 @@ export const ArticleModal = (props) => {
       const updatedSearch = [...prevSearch];
       updatedSearch[props.editingRowIndex] = newArticle;
       return updatedSearch;
+    });
+
+    Axios.post("http://localhost:3000/api/postArticle", {
+      articleId: generateArticleId,
+      articleName: newArticle,
+    }).then(() => {
+      alert("Article added succesfully!");
     });
   };
 

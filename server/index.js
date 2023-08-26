@@ -29,6 +29,11 @@ app.get("/api/getPO", (req, res) => {
   });
 });
 
+app.get("/api/getArticles", (req, res) => {
+  const selectArticles = "SELECT * FROM sql_office.article_names";
+  db.query(selectArticles, (err, result) => res.send(result));
+});
+
 app.post("/api/postSupplier", (req, res) => {
   const supplierId = req.body.supplierId;
   const supplierName = req.body.supplierName;
@@ -63,7 +68,7 @@ app.post("/api/postPO", (req, res) => {
   const fundCluster = req.body.fundCluster;
   const procMode = req.body.procMode;
   const unit = req.body.unit;
-  const article = req.body.article;
+  const articleId = req.body.articleId;
   const brand = req.body.article;
   const model = req.body.model;
   const serialNumber = req.body.serialNumber;
@@ -72,7 +77,7 @@ app.post("/api/postPO", (req, res) => {
   const totalCost = req.body.totalCost;
 
   const PoInsert =
-    "INSERT INTO sql_office.purchase_orders (supplierId, poNumber, poDate, fundCluster, procMode, unit, article, brand, model, serialNumber, quantity, unitCost, totalCost) VALUES (?, ?,?,?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO sql_office.purchase_orders (supplierId, poNumber, poDate, fundCluster, procMode, unit, articleId, brand, model, serialNumber, quantity, unitCost, totalCost) VALUES (?, ?,?,?,?,?,?,?,?,?,?,?,?)";
 
   db.query(
     PoInsert,
@@ -83,7 +88,7 @@ app.post("/api/postPO", (req, res) => {
       fundCluster,
       procMode,
       unit,
-      article,
+      articleId,
       brand,
       model,
       serialNumber,
@@ -95,6 +100,18 @@ app.post("/api/postPO", (req, res) => {
       console.log(err);
     }
   );
+});
+
+app.post("/api/postArticle", (req, res) => {
+  const articleId = req.body.articleId;
+  const articleName = req.body.articleName;
+
+  const ArticleInsert =
+    "INSERT INTO sql_office.article_names (articleId, articleName) VALUES (?,?)";
+
+  db.query(ArticleInsert, [articleId, articleName], (err, result) => {
+    console.log(err);
+  });
 });
 
 app.listen(3000, () => {

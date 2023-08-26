@@ -6,6 +6,7 @@ import * as IoIcons from "react-icons/io";
 import { SuppliersModal } from "../Suppliers/SuppliersModal";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchSuppliers } from "../Suppliers/SupplierSlice";
+import { fetchArticles } from "./ArticleSlice";
 import { addPurchaseOrder } from "./POSlice";
 import Axios from "axios";
 import { InputTable } from "./InputTable";
@@ -18,7 +19,7 @@ export const POForm = (props) => {
     fundCluster: "fund101",
     procMode: "shopping",
     unit: "",
-    article: [],
+    articleId: [],
     brand: [],
     model: [],
     serialNumber: [],
@@ -70,6 +71,10 @@ export const POForm = (props) => {
 
   useEffect(() => {
     dispatch(fetchSuppliers());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(fetchArticles());
   }, [dispatch]);
 
   const handleCostChange = (fieldName, value) => {
@@ -149,7 +154,7 @@ export const POForm = (props) => {
         fundCluster: poValues.fundCluster,
         procMode: poValues.procMode,
         unit: poValues.unit,
-        article: poValues.article,
+        article: poValues.articleId,
         brand: poValues.brand,
         model: poValues.model,
         serialNumber: poValues.serialNumber,
@@ -238,7 +243,7 @@ export const POForm = (props) => {
             </div>
 
             {openSupplierDropDown && (
-              <div className="flex justify-start relative">
+              <div className="flex justify-start relative z-20">
                 <ul
                   className={`bg-gray-100 w-64 absolute cursor-pointer overflow-y-auto z-10 ${
                     openSupplierDropDown ? "max-h-60" : "max-h-0"
@@ -355,109 +360,12 @@ export const POForm = (props) => {
           </div>
         </div>
         <div className="mt-10">
-          {/* <h1>DESCRIPTION</h1> */}
-          {/* <div className="flex  "> */}
-          <div>
-            <InputTable
-              // openArticleDropdown={openArticleDropdown}
-              // setOpenArticleDropdown={setOpenArticleDropdown}
-              setShowArticleModal={setShowArticleModal}
-              showArticleModal={showArticleModal}
-            />
-          </div>
-
-          {/* <div className="flex-wrap w-52 mr-8">
-              <label>Article</label>
-              <textarea
-                className="border-2"
-                id="article"
-                value={poValues.article}
-                onChange={(e) =>
-                  setPoValues({ ...poValues, article: e.target.value })
-                }
-              ></textarea>
-            </div> */}
-          {/* <div className="flex-wrap w-52 mr-4">
-              <label>Brand</label>
-              <input
-                className="border-2"
-                id="brand"
-                value={poValues.brand}
-                onChange={(e) =>
-                  setPoValues({ ...poValues, brand: e.target.value })
-                }
-              />
-            </div> */}
-          {/* <div className="flex-wrap w-52 mr-5">
-              <label>Model</label>
-              <input
-                className="border-2"
-                id="model"
-                value={poValues.model}
-                onChange={(e) =>
-                  setPoValues({ ...poValues, model: e.target.value })
-                }
-              />
-            </div> */}
-          {/* <div className="flex-wrap w-52 ">
-              <label>Serial Number</label>
-              <input
-                className="border-2"
-                id="serialNumber"
-                value={poValues.serialNumber}
-                onChange={(e) =>
-                  setPoValues({ ...poValues, serialNumber: e.target.value })
-                }
-              />
-            </div> */}
-          {/* </div> */}
+          <InputTable
+            setShowArticleModal={setShowArticleModal}
+            showArticleModal={showArticleModal}
+          />
         </div>
-        {/* <div className=" flex justify-end w-11/12 ">
-          <div className="flex-wrap w-20 ">
-            <label>Unit</label>
-            <input
-              className="border-2 w-16"
-              id="unit"
-              value={poValues.unit}
-              onChange={(e) =>
-                setPoValues({ ...poValues, unit: e.target.value })
-              }
-            />
-          </div>
-          <div className="flex-wrap w-20 ml-6">
-            <label>Quantity</label>
-            <input
-              className="border-2 w-16"
-              id="quantity"
-              value={poValues.quantity}
-              onChange={(e) => handleCostChange("quantity", e.target.value)}
-              onBlur={handleBlur}
-            />
-          </div>
-          <div className="flex-wrap w-36 ml-6">
-            <label>Unit Cost</label>
-            <input
-              className="border-2 w-36"
-              id="unitCost"
-              value={poValues.u}
-              onChange={(e) => handleCostChange("unitCost", e.target.value)}
-              onBlur={handleBlur}
-            />
-          </div>
-        </div> */}
-        {/* <div className="flex justify-end w-11/12 mt-10">
-          <div className="flex mr-18">
-            <label className="pr-2">Total Cost</label>
-            <TbIcons.TbCurrencyPeso className="text-3xl ml-24" />
 
-            <input
-              className="w-36 text-xl"
-              id="totalCost"
-              value={poValues.totalCost}
-              disabled
-            />
-          </div>
-        </div> */}
         <div className="flex justify-end w-11/12 mt-16 ">
           <input
             type="submit"

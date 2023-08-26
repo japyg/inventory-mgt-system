@@ -1,8 +1,9 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { TableRow } from "./TableRow";
 import * as TbIcons from "react-icons/tb";
 import { ArticleModal } from "./ArticleModal";
+import { useDispatch } from "react-redux";
 
 export const InputTable = (props) => {
   const [tableRowData, setTableRowData] = useState([
@@ -22,6 +23,8 @@ export const InputTable = (props) => {
     },
   ]);
 
+  const dispatch = useDispatch();
+
   const [editingRowIndex, setEditingRowIndex] = useState(-1);
   const [openArticleDropdown, setOpenArticleDropdown] = useState(
     Array(tableRowData.length).fill(false)
@@ -33,6 +36,8 @@ export const InputTable = (props) => {
   const [articleSearchQuery, setArticleSearchQuery] = useState(
     Array(tableRowData.length).fill("")
   );
+
+  // console.log(articleSearchQuery);
 
   const handleAddRow = (newRowData) => {
     const newRow = {
