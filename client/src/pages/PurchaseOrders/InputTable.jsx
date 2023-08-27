@@ -3,14 +3,14 @@ import { useState } from "react";
 import { TableRow } from "./TableRow";
 import * as TbIcons from "react-icons/tb";
 import { ArticleModal } from "./ArticleModal";
-import { useDispatch } from "react-redux";
 
 export const InputTable = (props) => {
+  //<---STATES--->
   const [tableRowData, setTableRowData] = useState([
     {
       key: 0,
       index: 0,
-      article: [],
+      article: "",
       description: "",
       brand: "",
       model: "",
@@ -22,8 +22,6 @@ export const InputTable = (props) => {
       totalCost: "",
     },
   ]);
-
-  const dispatch = useDispatch();
 
   const [editingRowIndex, setEditingRowIndex] = useState(-1);
   const [openArticleDropdown, setOpenArticleDropdown] = useState(
@@ -37,8 +35,7 @@ export const InputTable = (props) => {
     Array(tableRowData.length).fill("")
   );
 
-  // console.log(articleSearchQuery);
-
+  //<---HANDLER FUNCTIONS--->
   const handleAddRow = (newRowData) => {
     const newRow = {
       key: tableRowData.length,
@@ -108,6 +105,7 @@ export const InputTable = (props) => {
                 key={row.key}
                 index={index}
                 tableRowData={row}
+                setTableRowData={setTableRowData}
                 onChangeArticle={handleRowArticleChange}
                 setEditingRowIndex={setEditingRowIndex}
                 onDelete={handleDeleteRow}
@@ -145,6 +143,7 @@ export const InputTable = (props) => {
         editingRowIndex={editingRowIndex}
         articleSearchQuery={articleSearchQuery}
         setArticleSearchQuery={setArticleSearchQuery}
+        tableRowData={tableRowData}
       />
     </>
   );

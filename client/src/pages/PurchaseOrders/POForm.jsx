@@ -55,13 +55,6 @@ export const POForm = (props) => {
     }
   };
 
-  //DATA FORMATTING
-  const calculateTotalCost = () => {
-    const totalCost =
-      parseFloat(poValues.quantity) * parseFloat(poValues.unitCost);
-    return totalCost.toFixed(2);
-  };
-
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
@@ -76,23 +69,6 @@ export const POForm = (props) => {
   useEffect(() => {
     dispatch(fetchArticles());
   }, [dispatch]);
-
-  const handleCostChange = (fieldName, value) => {
-    setPoValues((prevValues) => ({
-      ...prevValues,
-      [fieldName]: value,
-    }));
-  };
-
-  const handleBlur = () => {
-    if (poValues.quantity && poValues.unitCost) {
-      const newTotalCost = calculateTotalCost();
-      setPoValues((prevValues) => ({
-        ...prevValues,
-        totalCost: newTotalCost,
-      }));
-    }
-  };
 
   const getCurrentDate = () => {
     const today = new Date();

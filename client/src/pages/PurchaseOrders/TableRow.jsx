@@ -5,13 +5,16 @@ import * as IoIcons from "react-icons/io";
 
 export const TableRow = (props) => {
   const articles = useSelector((state) => state.article.articleInfo);
-  // console.log(articles);
+
   const handleSelectedArticle = (article) => {
     props.setSelectedArticle((prevSelected) => {
       const updatedSelected = [...prevSelected];
       updatedSelected[props.index] = article;
       return updatedSelected;
     });
+
+    //assign selected article name to the tableRow data state
+    props.tableRowData.article = article.articleName;
 
     props.setArticleSearchQuery((prevSearch) => {
       const updatedSearch = [...prevSearch];
@@ -20,6 +23,7 @@ export const TableRow = (props) => {
     });
 
     props.toggleDropdown(props.index);
+    console.log(props.tableRowData);
   };
 
   const handleArticleInputChange = (index, e) => {
@@ -79,6 +83,23 @@ export const TableRow = (props) => {
       document.removeEventListener("mousedown", handleClickOutsideArticle);
     };
   }, []);
+
+  //function for Description
+  const updateDescription = (index, description) => {
+    props.setTableRowData((prevRows) => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = { ...updatedRows[index], description: description };
+      return updatedRows;
+    });
+  };
+
+  //<---DATA FORMATTING--->
+  const calculateTotalCost = () => {
+    const totalCost =
+      parseFloat(props.tableRowData.quantity) *
+      parseFloat(props.tableRowData.unitCost);
+    return totalCost.toFixed(2);
+  };
 
   return (
     <>
@@ -147,7 +168,11 @@ export const TableRow = (props) => {
         </td>
 
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap flex ">
-          <textarea className="border-2 h-8 resize-none" />
+          <textarea
+            value={props.tableRowData.description}
+            onChange={(e) => updateDescription(props.index, e.target.value)}
+            className="border-2 h-8 resize-none"
+          />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
           <input className="border-2 w-full h-8 resize-none" />
@@ -162,13 +187,17 @@ export const TableRow = (props) => {
           <input className="border-2 w-14  h-8 " />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
-          <input className="border-2 w-14 h-8" />
+          <input
+            type="number"
+            onChange={(e) => console.log(e.target.value)}
+            className="border-2 w-14 h-8"
+          />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
           <input className="border-2 w-24 h-8" />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
-          <input className="border-2 w-32 h-8" />
+          <input value={0} disabled className="border-2 w-32 h-8" />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap ">
           <BiIcons.BiTrash className="text-xl" onClick={handleDeleteRow} />
