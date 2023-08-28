@@ -25,7 +25,7 @@ export const TableRow = (props) => {
     props.toggleDropdown(props.index);
     console.log(props.tableRowData);
   };
-
+  console.log(props.tableRowData);
   const handleArticleInputChange = (index, e) => {
     const inputValue = e.target.value;
 
@@ -89,6 +89,70 @@ export const TableRow = (props) => {
     props.setTableRowData((prevRows) => {
       const updatedRows = [...prevRows];
       updatedRows[index] = { ...updatedRows[index], description: description };
+      return updatedRows;
+    });
+  };
+
+  //function for Brand
+  const updateBrand = (index, brand) => {
+    props.setTableRowData((prevRows) => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = { ...updatedRows[index], brand: brand };
+      return updatedRows;
+    });
+  };
+
+  //function for Model
+  const updateModel = (index, model) => {
+    props.setTableRowData((prevRows) => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = { ...updatedRows[index], model: model };
+      return updatedRows;
+    });
+  };
+
+  //function for Serial Number
+  const updateSerialNumber = (index, serialNumber) => {
+    props.setTableRowData((prevRows) => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = {
+        ...updatedRows[index],
+        serialNumber: serialNumber,
+      };
+      return updatedRows;
+    });
+  };
+  //function for Unit
+  const updateUnit = (index, unit) => {
+    props.setTableRowData((prevRows) => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = {
+        ...updatedRows[index],
+        unit: unit,
+      };
+      return updatedRows;
+    });
+  };
+
+  //function for Quantity
+  const updateQuantity = (index, qty) => {
+    props.setTableRowData((prevRows) => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = {
+        ...updatedRows[index],
+        quantity: qty,
+      };
+      return updatedRows;
+    });
+  };
+
+  const updateUnitCost = (index, unitCost) => {
+    props.setTableRowData((prevRows) => {
+      const updatedRows = [...prevRows];
+      updatedRows[index] = {
+        ...updatedRows[index],
+        unitCost: unitCost,
+      };
       return updatedRows;
     });
   };
@@ -175,26 +239,51 @@ export const TableRow = (props) => {
           />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
-          <input className="border-2 w-full h-8 resize-none" />
+          <input
+            value={props.tableRowData.brand}
+            onChange={(e) => updateBrand(props.index, e.target.value)}
+            className="border-2 w-full h-8 resize-none"
+          />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
-          <input className="border-2 h-8 w-full" />
+          <input
+            value={props.tableRowData.model}
+            onChange={(e) => updateModel(props.index, e.target.value)}
+            className="border-2 h-8 w-full"
+          />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
-          <input className="border-2 h-8 w-32" />
+          <input
+            value={props.tableRowData.serialNumber}
+            onChange={(e) => updateSerialNumber(props.index, e.target.value)}
+            className="border-2 h-8 w-32"
+          />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
-          <input className="border-2 w-14  h-8 " />
+          <select
+            value={props.tableRowData.unit}
+            onChange={(e) => updateUnit(props.index, e.target.value)}
+            className="border-2 w-14  h-8 "
+          >
+            <option>pc</option>
+            <option>box</option>
+            <option>pack</option>
+          </select>
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
           <input
             type="number"
-            onChange={(e) => console.log(e.target.value)}
+            value={props.tableRowData.quantity}
+            onChange={(e) => updateQuantity(props.index, e.target.value)}
             className="border-2 w-14 h-8"
           />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
-          <input className="border-2 w-24 h-8" />
+          <input
+            value={props.tableRowData.unitCost}
+            onChange={(e) => updateUnitCost(props.index, e.target.value)}
+            className="border-2 w-24 h-8"
+          />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
           <input value={0} disabled className="border-2 w-32 h-8" />
