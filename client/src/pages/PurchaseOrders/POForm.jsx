@@ -28,6 +28,7 @@ export const POForm = (props) => {
     amount: [],
     totalCost: 0,
   });
+  console.log(poValues);
 
   const suppliers = useSelector((state) => state.supplier.supplierInfo);
 
@@ -339,6 +340,8 @@ export const POForm = (props) => {
           <InputTable
             setShowArticleModal={setShowArticleModal}
             showArticleModal={showArticleModal}
+            poValues={poValues}
+            setPoValues={setPoValues}
           />
         </div>
 

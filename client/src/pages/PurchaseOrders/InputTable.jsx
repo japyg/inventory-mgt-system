@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TableRow } from "./TableRow";
 import * as TbIcons from "react-icons/tb";
 import { ArticleModal } from "./ArticleModal";
@@ -16,12 +16,25 @@ export const InputTable = (props) => {
       model: "",
       serialNumber: "",
       unit: "",
-      quantity: "",
-      unitCost: "",
-      amount: "",
-      totalCost: "",
+      quantity: 0,
+      unitCost: 0,
+      amount: 0,
     },
   ]);
+
+  const calculateTotalCost = () => {
+    const total = tableRowData.reduce((acc, row) => {
+      return acc + parseFloat(row.amount);
+    }, 0);
+    return total.toFixed(2);
+  };
+  useEffect(() => {
+    const totalCost = calculateTotalCost();
+    props.setPoValues((prevPoValues) => ({
+      ...prevPoValues,
+      totalCost: totalCost,
+    }));
+  }, [tableRowData]);
 
   const [editingRowIndex, setEditingRowIndex] = useState(-1);
   const [openArticleDropdown, setOpenArticleDropdown] = useState(
@@ -46,12 +59,12 @@ export const InputTable = (props) => {
       model: "",
       serialNumber: "",
       unit: "",
-      quantity: "",
-      unitCost: "",
-      amount: "",
-      totalCost: "",
+      quantity: 0,
+      unitCost: 0,
+      amount: 0,
     };
     setTableRowData([...tableRowData, newRow]);
+    setArticleSearchQuery([...articleSearchQuery, ""]);
   };
 
   const handleDeleteRow = (indexToDelete) => {
@@ -131,7 +144,12 @@ export const InputTable = (props) => {
             <label className="pr-2">Total Cost</label>
             <TbIcons.TbCurrencyPeso className="text-3xl ml-16" />
 
-            <input className="w-36 text-xl" id="amount" disabled />
+            <input
+              value={props.poValues.totalCost}
+              className="w-36 text-xl"
+              id="amount"
+              disabled
+            />
           </div>
         </div>
       </div>

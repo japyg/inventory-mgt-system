@@ -23,9 +23,8 @@ export const TableRow = (props) => {
     });
 
     props.toggleDropdown(props.index);
-    console.log(props.tableRowData);
   };
-  console.log(props.tableRowData);
+  // console.log(props.tableRowData);
   const handleArticleInputChange = (index, e) => {
     const inputValue = e.target.value;
 
@@ -142,6 +141,15 @@ export const TableRow = (props) => {
         ...updatedRows[index],
         quantity: qty,
       };
+      const quantity = parseFloat(qty);
+      const unitCost = updatedRows[index].unitCost;
+
+      if (!isNaN(quantity) && !isNaN(unitCost)) {
+        updatedRows[index].amount = (quantity * unitCost).toFixed(2);
+      } else {
+        updatedRows[index].amount = 0.0; // Reset the amount if either quantity or unit cost is not a number
+      }
+
       return updatedRows;
     });
   };
@@ -153,17 +161,20 @@ export const TableRow = (props) => {
         ...updatedRows[index],
         unitCost: unitCost,
       };
+      const quantity = parseFloat(updatedRows[index].quantity);
+      const unitCostValue = unitCost;
+
+      if (!isNaN(quantity) && !isNaN(unitCostValue)) {
+        updatedRows[index].amount = (quantity * unitCostValue).toFixed(2);
+      } else {
+        updatedRows[index].amount = 0; // Reset the amount if either quantity or unit cost is not a number
+      }
+
       return updatedRows;
     });
   };
 
   //<---DATA FORMATTING--->
-  const calculateTotalCost = () => {
-    const totalCost =
-      parseFloat(props.tableRowData.quantity) *
-      parseFloat(props.tableRowData.unitCost);
-    return totalCost.toFixed(2);
-  };
 
   return (
     <>
@@ -280,13 +291,19 @@ export const TableRow = (props) => {
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
           <input
+            type="number"
             value={props.tableRowData.unitCost}
             onChange={(e) => updateUnitCost(props.index, e.target.value)}
             className="border-2 w-24 h-8"
           />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap">
-          <input value={0} disabled className="border-2 w-32 h-8" />
+          <input
+            value={props.tableRowData.amount}
+            placeholder="0.00"
+            disabled
+            className="border-2 w-32 h-8"
+          />
         </td>
         <td className="p-2 border resize-horizontal overflow-hidden whitespace-nowrap ">
           <BiIcons.BiTrash className="text-xl" onClick={handleDeleteRow} />
