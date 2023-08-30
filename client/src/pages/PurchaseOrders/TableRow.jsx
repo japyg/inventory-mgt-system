@@ -174,6 +174,21 @@ export const TableRow = (props) => {
     });
   };
 
+  //Calculate Total Cost
+  const calculateTotalCost = () => {
+    const total = props.tableData.reduce((acc, row) => {
+      return acc + parseFloat(row.amount);
+    }, 0);
+    return total.toFixed(2);
+  };
+  useEffect(() => {
+    const totalCost = calculateTotalCost();
+    props.setPoValues((prevPoValues) => ({
+      ...prevPoValues,
+      totalCost: totalCost,
+    }));
+  }, [props.tableData]);
+
   //<---DATA FORMATTING--->
 
   return (

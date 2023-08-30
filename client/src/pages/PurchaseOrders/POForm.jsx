@@ -28,7 +28,6 @@ export const POForm = (props) => {
     amount: [],
     totalCost: 0,
   });
-  console.log(poValues);
 
   const suppliers = useSelector((state) => state.supplier.supplierInfo);
 

@@ -15,26 +15,12 @@ export const InputTable = (props) => {
       brand: "",
       model: "",
       serialNumber: "",
-      unit: "",
+      unit: "pc",
       quantity: 0,
       unitCost: 0,
       amount: 0,
     },
   ]);
-
-  const calculateTotalCost = () => {
-    const total = tableRowData.reduce((acc, row) => {
-      return acc + parseFloat(row.amount);
-    }, 0);
-    return total.toFixed(2);
-  };
-  useEffect(() => {
-    const totalCost = calculateTotalCost();
-    props.setPoValues((prevPoValues) => ({
-      ...prevPoValues,
-      totalCost: totalCost,
-    }));
-  }, [tableRowData]);
 
   const [editingRowIndex, setEditingRowIndex] = useState(-1);
   const [openArticleDropdown, setOpenArticleDropdown] = useState(
@@ -58,7 +44,7 @@ export const InputTable = (props) => {
       brand: "",
       model: "",
       serialNumber: "",
-      unit: "",
+      unit: "pc",
       quantity: 0,
       unitCost: 0,
       amount: 0,
@@ -118,6 +104,7 @@ export const InputTable = (props) => {
                 key={row.key}
                 index={index}
                 tableRowData={row}
+                tableData={tableRowData}
                 setTableRowData={setTableRowData}
                 onChangeArticle={handleRowArticleChange}
                 setEditingRowIndex={setEditingRowIndex}
@@ -131,6 +118,8 @@ export const InputTable = (props) => {
                 setSelectedArticle={setSelectedArticle}
                 articleSearchQuery={articleSearchQuery}
                 setArticleSearchQuery={setArticleSearchQuery}
+                poValues={props.poValues}
+                setPoValues={props.setPoValues}
               />
             ))}
           </tbody>
