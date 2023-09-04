@@ -10,26 +10,50 @@ import { fetchArticles } from "./ArticleSlice";
 import { addPurchaseOrder } from "./POSlice";
 import Axios from "axios";
 import { InputTable } from "./InputTable";
+import { addTableRowData } from "./TableRowSlice";
 
 export const POForm = (props) => {
   //PO Form States
+  const [tableRowData, setTableRowData] = useState([
+    {
+      key: 0,
+      index: 0,
+      articleName: "",
+      description: "",
+      brand: "",
+      model: "",
+      serialNumber: "",
+      unit: "pc",
+      quantity: 0,
+      unitCost: 0,
+      amount: 0,
+    },
+  ]);
+
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0"); // Add 1 because months are 0-indexed
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   const [poValues, setPoValues] = useState({
     poNumber: "",
-    poDate: "",
+    supplierName: "",
+    supplierAddress: "",
+    supplierTin: "",
+    poDate: getCurrentDate(),
     fundCluster: "fund101",
     procMode: "shopping",
     unit: "",
-    articleId: [],
-    brand: [],
-    model: [],
-    serialNumber: [],
-    quantity: [],
-    unitCost: [],
-    amount: [],
     totalCost: 0,
+    articleId: [],
   });
 
+  const tableInfo = useSelector((state) => state.tableRowData.tableRowDataInfo);
   const suppliers = useSelector((state) => state.supplier.supplierInfo);
+  const articles = useSelector((state) => state.article.articleInfo);
 
   const dispatch = useDispatch();
 
@@ -69,15 +93,6 @@ export const POForm = (props) => {
   useEffect(() => {
     dispatch(fetchArticles());
   }, [dispatch]);
-
-  const getCurrentDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = (today.getMonth() + 1).toString().padStart(2, "0");
-    const day = today.getDate().toString().padStart(2, "0");
-
-    return `${year}-${month}-${day}`;
-  };
 
   const formatPoNum = (poNum) => {
     poNum = poNum.replace(/-/g, ""); // Remove existing dashes
@@ -120,58 +135,55 @@ export const POForm = (props) => {
   };
 
   const addNewPo = () => {
+    dispatch(addTableRowData(tableRowData));
     dispatch(
       addPurchaseOrder({
-        supplierName: selectedSupplier.supplierName,
-        supplierTin: selectedSupplier.supplierTin,
-        supplierAddress: selectedSupplier.supplierAddress,
         poNumber: poValues.poNumber,
         poDate: poValues.poDate,
         fundCluster: poValues.fundCluster,
         procMode: poValues.procMode,
-        unit: poValues.unit,
-        article: poValues.articleId,
-        brand: poValues.brand,
-        model: poValues.model,
-        serialNumber: poValues.serialNumber,
-        quantity: poValues.quantity,
-        unitCost: poValues.unitCost,
         totalCost: poValues.totalCost,
+        articleId: poValues.articleId.push(articles.articleId),
       })
     );
-
     setPoValues({
       poNumber: "",
       poDate: "",
-      supplierName: selectedSupplier.supplierName,
+      supplierName: "",
       fundCluster: "fund101",
       procMode: "shopping",
-      unit: "",
-      article: "",
-      brand: "",
-      model: "",
-      serialNumber: "",
-      quantity: 0,
-      unitCost: 0.0,
       totalCost: 0.0,
+      tableRowData: [],
+    });
+    let tableIdCounter = 0;
+
+    Axios.post("http://localhost:3000/api/postTableRowData", {
+      tableId: tableIdCounter++,
+      poNumber: poValues.poNumber,
+      key: tableRowData[tableRowData.length - 1].key,
+      index: tableRowData[tableRowData.length - 1].index,
+      description: tableRowData[tableRowData.length - 1].description,
+      brand: tableRowData[tableRowData.length - 1].brand,
+      model: tableRowData[tableRowData.length - 1].model,
+      serialNumber: tableRowData[tableRowData.length - 1].serialNumber,
+      unit: tableRowData[tableRowData.length - 1].unit,
+      quantity: tableRowData[tableRowData.length - 1].quantity,
+      unitCost: tableRowData[tableRowData.length - 1].unitCost,
+      amount: tableRowData[tableRowData.length - 1].amount,
+    }).then(() => {
+      alert("Data from table added succesfully!");
     });
 
     Axios.post("http://localhost:3000/api/postPO", {
-      supplierId: selectedSupplier.supplierId,
       poNumber: poValues.poNumber,
+      supplierId: selectedSupplier.supplierId,
       poDate: poValues.poDate,
       fundCluster: poValues.fundCluster,
       procMode: poValues.procMode,
-      unit: poValues.unit,
-      article: poValues.article,
-      brand: poValues.brand,
-      model: poValues.model,
-      serialNumber: poValues.serialNumber,
-      quantity: poValues.quantity,
-      unitCost: poValues.unitCost,
+      articleId: poValues.articleId.push(articles.articleId),
       totalCost: poValues.totalCost,
     }).then(() => {
-      alert("Supplier added succesfully!");
+      alert("PO added succesfully!");
     });
   };
 
@@ -298,12 +310,12 @@ export const POForm = (props) => {
               className="border-2"
               id="poNumber"
               value={formatPoNum(poValues.poNumber)}
-              onChange={(e) =>
-                setPoValues({ ...poValues, poNumber: e.target.value })
-              }
+              onChange={(e) => {
+                setPoValues({ ...poValues, poNumber: e.target.value });
+              }}
               required
               maxLength={11}
-              title="Enter a valid PO Number  in the format XXXX-XX-XXX"
+              title="Enter a valid PO Number in the format XXXX-XX-XXX"
             />
           </div>
           <div className="flex-wrap w-36">
@@ -341,6 +353,8 @@ export const POForm = (props) => {
             showArticleModal={showArticleModal}
             poValues={poValues}
             setPoValues={setPoValues}
+            tableRowData={tableRowData}
+            setTableRowData={setTableRowData}
           />
         </div>
 

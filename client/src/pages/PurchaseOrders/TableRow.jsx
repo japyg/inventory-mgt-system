@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as BiIcons from "react-icons/bi";
 import * as IoIcons from "react-icons/io";
+import { addTableRowData } from "./TableRowSlice";
 
 export const TableRow = (props) => {
   const articles = useSelector((state) => state.article.articleInfo);
@@ -24,7 +25,7 @@ export const TableRow = (props) => {
 
     props.toggleDropdown(props.index);
   };
-  // console.log(props.tableRowData);
+
   const handleArticleInputChange = (index, e) => {
     const inputValue = e.target.value;
 
@@ -99,6 +100,11 @@ export const TableRow = (props) => {
       updatedRows[index] = { ...updatedRows[index], brand: brand };
       return updatedRows;
     });
+  };
+
+  // Set the current row index when a row is focused or selected
+  const setCurrentRow = (index) => {
+    setCurrentRowIndex(index);
   };
 
   //function for Model

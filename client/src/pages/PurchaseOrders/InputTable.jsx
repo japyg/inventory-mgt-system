@@ -3,13 +3,36 @@ import { useState, useEffect } from "react";
 import { TableRow } from "./TableRow";
 import * as TbIcons from "react-icons/tb";
 import { ArticleModal } from "./ArticleModal";
+import { useDispatch, useSelector } from "react-redux";
 
 export const InputTable = (props) => {
+  const dispatch = useDispatch();
   //<---STATES--->
-  const [tableRowData, setTableRowData] = useState([
-    {
-      key: 0,
-      index: 0,
+  const tableData = useSelector((state) => state.tableRowData.tableRowDataInfo);
+
+  const [editingRowIndex, setEditingRowIndex] = useState(-1);
+  const [openArticleDropdown, setOpenArticleDropdown] = useState(
+    Array(props.tableRowData.length).fill(false)
+  );
+
+  const [selectedArticle, setSelectedArticle] = useState(
+    Array(props.tableRowData.length).fill({})
+  );
+  const [articleSearchQuery, setArticleSearchQuery] = useState(
+    Array(props.tableRowData.length).fill("")
+  );
+
+  const generateKey =
+    props.tableRowData.length > 0
+      ? Number(props.tableRowData[props.tableRowData.length - 1].key) + 1
+      : 1;
+
+  //<---HANDLER FUNCTIONS--->
+  const handleAddRow = (event, newRowData) => {
+    event.preventDefault();
+    const newRow = {
+      key: generateKey,
+      index: generateKey,
       article: "",
       description: "",
       brand: "",
@@ -19,48 +42,19 @@ export const InputTable = (props) => {
       quantity: 0,
       unitCost: 0,
       amount: 0,
-    },
-  ]);
-
-  const [editingRowIndex, setEditingRowIndex] = useState(-1);
-  const [openArticleDropdown, setOpenArticleDropdown] = useState(
-    Array(tableRowData.length).fill(false)
-  );
-
-  const [selectedArticle, setSelectedArticle] = useState(
-    Array(tableRowData.length).fill({})
-  );
-  const [articleSearchQuery, setArticleSearchQuery] = useState(
-    Array(tableRowData.length).fill("")
-  );
-
-  //<---HANDLER FUNCTIONS--->
-  const handleAddRow = (newRowData) => {
-    const newRow = {
-      key: tableRowData.length,
-      index: tableRowData.length,
-      article: newRowData.length > 0 ? newRowData : "",
-      description: "",
-      brand: "",
-      model: "",
-      serialNumber: "",
-      unit: "pc",
-      quantity: 0,
-      unitCost: 0,
-      amount: 0,
     };
-    setTableRowData([...tableRowData, newRow]);
+    props.setTableRowData([...props.tableRowData, newRow]);
     setArticleSearchQuery([...articleSearchQuery, ""]);
   };
 
   const handleDeleteRow = (indexToDelete) => {
-    setTableRowData((prevRows) =>
+    props.setTableRowData((prevRows) =>
       prevRows.filter((row) => row.index !== indexToDelete)
     );
   };
 
   const handleRowArticleChange = (index, newValue) => {
-    setTableRowData((prevRows) => {
+    props.setTableRowData((prevRows) => {
       const updatedRows = [...prevRows]; // Create a copy of the array
       updatedRows[index] = { ...updatedRows[index], article: newValue }; // Update the specific row
       return updatedRows; // Return the updated array to setTableRowData
@@ -99,13 +93,13 @@ export const InputTable = (props) => {
             </tr>
           </thead>
           <tbody>
-            {tableRowData.map((row, index) => (
+            {props.tableRowData.map((row, index) => (
               <TableRow
                 key={row.key}
                 index={index}
                 tableRowData={row}
-                tableData={tableRowData}
-                setTableRowData={setTableRowData}
+                tableData={props.tableRowData}
+                setTableRowData={props.setTableRowData}
                 onChangeArticle={handleRowArticleChange}
                 setEditingRowIndex={setEditingRowIndex}
                 onDelete={handleDeleteRow}
@@ -150,7 +144,7 @@ export const InputTable = (props) => {
         editingRowIndex={editingRowIndex}
         articleSearchQuery={articleSearchQuery}
         setArticleSearchQuery={setArticleSearchQuery}
-        tableRowData={tableRowData}
+        tableRowData={props.tableRowData}
       />
     </>
   );

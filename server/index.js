@@ -34,6 +34,11 @@ app.get("/api/getArticles", (req, res) => {
   db.query(selectArticles, (err, result) => res.send(result));
 });
 
+app.get("/api/getTableRowData", (req, res) => {
+  const selectTableRowData = "SELECT * FROM sql_office.po_tablerow_inventory";
+  db.query(selectTableRowData, (err, result) => res.send(result));
+});
+
 app.post("/api/postSupplier", (req, res) => {
   const supplierId = req.body.supplierId;
   const supplierName = req.body.supplierName;
@@ -62,39 +67,58 @@ app.post("/api/postSupplier", (req, res) => {
 });
 
 app.post("/api/postPO", (req, res) => {
-  const supplierId = req.body.supplierId;
   const poNumber = req.body.poNumber;
+  const supplierId = req.body.supplierId;
   const poDate = req.body.poDate;
   const fundCluster = req.body.fundCluster;
   const procMode = req.body.procMode;
-  const unit = req.body.unit;
-  const articleId = req.body.articleId;
-  const brand = req.body.article;
-  const model = req.body.model;
-  const serialNumber = req.body.serialNumber;
-  const quantity = req.body.quantity;
-  const unitCost = req.body.unitCost;
   const totalCost = req.body.totalCost;
+  const articleId = req.body.articleId;
 
   const PoInsert =
-    "INSERT INTO sql_office.purchase_orders (supplierId, poNumber, poDate, fundCluster, procMode, unit, articleId, brand, model, serialNumber, quantity, unitCost, totalCost) VALUES (?, ?,?,?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO sql_office.purchase_orders (poNumber, supplierId,  poDate, fundCluster, procMode, totalCost, articleId) VALUES (?,?,?,?,?,?,?)";
 
   db.query(
     PoInsert,
+    [poNumber, supplierId, poDate, fundCluster, procMode, totalCost, articleId],
+    (err, result) => {
+      console.log(err);
+    }
+  );
+});
+
+app.post("/api/postTableRowData", (req, res) => {
+  const tableId = req.body.tableId;
+  const poNumber = req.body.poNumber;
+  const key = req.body.key;
+  const index = req.body.index;
+  const description = req.body.description;
+  const brand = req.body.brand;
+  const model = req.body.model;
+  const serialNumber = req.body.serialNumber;
+  const unit = req.body.unit;
+  const quantity = req.body.quantity;
+  const unitCost = req.body.unitCost;
+  const amount = req.body.amount;
+
+  const tableRowDataInsert =
+    "INSERT INTO sql_office.po_tablerow_inventory (tableId, poNumber, `key`, `index`, description, brand, model, serialNumber, unit, quantity, unitCost, amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+
+  db.query(
+    tableRowDataInsert,
     [
-      supplierId,
+      tableId,
       poNumber,
-      poDate,
-      fundCluster,
-      procMode,
-      unit,
-      articleId,
+      key,
+      index,
+      description,
       brand,
       model,
       serialNumber,
+      unit,
       quantity,
       unitCost,
-      totalCost,
+      amount,
     ],
     (err, result) => {
       console.log(err);
