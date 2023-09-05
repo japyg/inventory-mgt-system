@@ -51,14 +51,20 @@ export const POForm = (props) => {
     articleId: [],
   });
 
-  const tableInfo = useSelector((state) => state.tableRowData.tableRowDataInfo);
+  const poNumbers = useSelector(
+    (state) => state.purchaseOrder.purchaseOrderData
+  );
   const suppliers = useSelector((state) => state.supplier.supplierInfo);
   const articles = useSelector((state) => state.article.articleInfo);
-
+  console.log(poNumbers[poNumbers.length - 1].poNumber);
   const dispatch = useDispatch();
 
   const [selectedSupplier, setSelectedSupplier] = useState({});
   const [searchQuery, setSearchQuery] = useState("");
+
+  const [selectedArticle, setSelectedArticle] = useState(
+    Array(tableRowData.length).fill({})
+  );
 
   const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [showArticleModal, setShowArticleModal] = useState(false);
@@ -143,7 +149,6 @@ export const POForm = (props) => {
         fundCluster: poValues.fundCluster,
         procMode: poValues.procMode,
         totalCost: poValues.totalCost,
-        articleId: poValues.articleId.push(articles.articleId),
       })
     );
     setPoValues({
@@ -155,13 +160,10 @@ export const POForm = (props) => {
       totalCost: 0.0,
       tableRowData: [],
     });
-    let tableIdCounter = 0;
 
     Axios.post("http://localhost:3000/api/postTableRowData", {
-      tableId: tableIdCounter++,
-      poNumber: poValues.poNumber,
-      key: tableRowData[tableRowData.length - 1].key,
-      index: tableRowData[tableRowData.length - 1].index,
+      poNumber: poNumbers[poNumbers.length - 1].poNumber,
+      articleId: selectedArticle.articleId,
       description: tableRowData[tableRowData.length - 1].description,
       brand: tableRowData[tableRowData.length - 1].brand,
       model: tableRowData[tableRowData.length - 1].model,
@@ -180,8 +182,8 @@ export const POForm = (props) => {
       poDate: poValues.poDate,
       fundCluster: poValues.fundCluster,
       procMode: poValues.procMode,
-      articleId: poValues.articleId.push(articles.articleId),
       totalCost: poValues.totalCost,
+      articleId: poValues.articleId.push(articles.articleId),
     }).then(() => {
       alert("PO added succesfully!");
     });
@@ -355,6 +357,8 @@ export const POForm = (props) => {
             setPoValues={setPoValues}
             tableRowData={tableRowData}
             setTableRowData={setTableRowData}
+            selectedArticle={selectedArticle}
+            setSelectedArticle={setSelectedArticle}
           />
         </div>
 

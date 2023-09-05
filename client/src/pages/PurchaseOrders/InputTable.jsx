@@ -15,9 +15,9 @@ export const InputTable = (props) => {
     Array(props.tableRowData.length).fill(false)
   );
 
-  const [selectedArticle, setSelectedArticle] = useState(
-    Array(props.tableRowData.length).fill({})
-  );
+  // const [selectedArticle, setSelectedArticle] = useState(
+  //   Array(props.tableRowData.length).fill({})
+  // );
   const [articleSearchQuery, setArticleSearchQuery] = useState(
     Array(props.tableRowData.length).fill("")
   );
@@ -108,8 +108,8 @@ export const InputTable = (props) => {
                 toggleDropdown={toggleDropdown}
                 editingRowIndex={editingRowIndex}
                 setShowArticleModal={props.setShowArticleModal}
-                selectedArticle={selectedArticle}
-                setSelectedArticle={setSelectedArticle}
+                selectedArticle={props.selectedArticle}
+                setSelectedArticle={props.setSelectedArticle}
                 articleSearchQuery={articleSearchQuery}
                 setArticleSearchQuery={setArticleSearchQuery}
                 poValues={props.poValues}

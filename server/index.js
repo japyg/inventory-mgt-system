@@ -88,10 +88,8 @@ app.post("/api/postPO", (req, res) => {
 });
 
 app.post("/api/postTableRowData", (req, res) => {
-  const tableId = req.body.tableId;
   const poNumber = req.body.poNumber;
-  const key = req.body.key;
-  const index = req.body.index;
+  const articleId = req.body.articleId;
   const description = req.body.description;
   const brand = req.body.brand;
   const model = req.body.model;
@@ -102,15 +100,13 @@ app.post("/api/postTableRowData", (req, res) => {
   const amount = req.body.amount;
 
   const tableRowDataInsert =
-    "INSERT INTO sql_office.po_tablerow_inventory (tableId, poNumber, `key`, `index`, description, brand, model, serialNumber, unit, quantity, unitCost, amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO sql_office.po_tablerow_inventory (poNumber, articleId, description, brand, model, serialNumber, unit, quantity, unitCost, amount) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
   db.query(
     tableRowDataInsert,
     [
-      tableId,
       poNumber,
-      key,
-      index,
+      articleId,
       description,
       brand,
       model,
