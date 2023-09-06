@@ -56,7 +56,7 @@ export const POForm = (props) => {
   );
   const suppliers = useSelector((state) => state.supplier.supplierInfo);
   const articles = useSelector((state) => state.article.articleInfo);
-  console.log(poNumbers[poNumbers.length - 1].poNumber);
+
   const dispatch = useDispatch();
 
   const [selectedSupplier, setSelectedSupplier] = useState({});
@@ -65,6 +65,15 @@ export const POForm = (props) => {
   const [selectedArticle, setSelectedArticle] = useState(
     Array(tableRowData.length).fill({})
   );
+
+  const descriptions = tableRowData.map((item) => item.description);
+  const brands = tableRowData.map((item) => item.brand);
+  const models = tableRowData.map((item) => item.model);
+  const serialNumbers = tableRowData.map((item) => item.serialNumber);
+  const units = tableRowData.map((item) => item.unit);
+  const quantities = tableRowData.map((item) => item.quantity);
+  const unitCosts = tableRowData.map((item) => item.unitCost);
+  const amounts = tableRowData.map((item) => item.amount);
 
   const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [showArticleModal, setShowArticleModal] = useState(false);
@@ -161,19 +170,21 @@ export const POForm = (props) => {
       tableRowData: [],
     });
 
-    Axios.post("http://localhost:3000/api/postTableRowData", {
-      poNumber: poNumbers[poNumbers.length - 1].poNumber,
-      articleId: selectedArticle.articleId,
-      description: tableRowData[tableRowData.length - 1].description,
-      brand: tableRowData[tableRowData.length - 1].brand,
-      model: tableRowData[tableRowData.length - 1].model,
-      serialNumber: tableRowData[tableRowData.length - 1].serialNumber,
-      unit: tableRowData[tableRowData.length - 1].unit,
-      quantity: tableRowData[tableRowData.length - 1].quantity,
-      unitCost: tableRowData[tableRowData.length - 1].unitCost,
-      amount: tableRowData[tableRowData.length - 1].amount,
-    }).then(() => {
-      alert("Data from table added succesfully!");
+    tableRowData.forEach((row) => {
+      Axios.post("http://localhost:3000/api/postTableRowData", {
+        poNumber: poValues.poNumber,
+        articleId: selectedArticle.articleId,
+        description: row.description,
+        brand: row.brand,
+        model: row.model,
+        serialNumber: row.serialNumber,
+        unit: row.unit,
+        quantity: row.quantity,
+        unitCost: row.unitCost,
+        amount: row.amount,
+      }).then(() => {
+        alert("Data from table added succesfully!");
+      });
     });
 
     Axios.post("http://localhost:3000/api/postPO", {
@@ -183,7 +194,7 @@ export const POForm = (props) => {
       fundCluster: poValues.fundCluster,
       procMode: poValues.procMode,
       totalCost: poValues.totalCost,
-      articleId: poValues.articleId.push(articles.articleId),
+      // articleId: poValues.articleId.push(articles.articleId),
     }).then(() => {
       alert("PO added succesfully!");
     });
