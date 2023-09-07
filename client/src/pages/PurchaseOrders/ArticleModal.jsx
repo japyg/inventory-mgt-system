@@ -34,7 +34,7 @@ export const ArticleModal = (props) => {
       updatedSearch[props.editingRowIndex] = newArticle;
       return updatedSearch;
     });
-    console.log(props.tableRowData[props.editingRowIndex]);
+
     props.tableRowData[props.editingRowIndex].article = newArticle;
     Axios.post("http://localhost:3000/api/postArticle", {
       articleId: generateArticleId,

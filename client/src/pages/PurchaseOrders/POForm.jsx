@@ -158,8 +158,9 @@ export const POForm = (props) => {
     });
 
     const promises = tableRowData.map((row, index) => {
+      const tableKey = tableRowData.length + index;
       return Axios.post("http://localhost:3000/api/postTableRowData", {
-        tableKey: row.key,
+        tableKey: tableKey,
         poNumber: poValues.poNumber,
         articleId: selectedArticle[index].articleId, // Access the articleId for the current row
         description: row.description,
