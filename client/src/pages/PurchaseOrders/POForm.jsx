@@ -51,11 +51,7 @@ export const POForm = (props) => {
     articleId: [],
   });
 
-  const poNumbers = useSelector(
-    (state) => state.purchaseOrder.purchaseOrderData
-  );
   const suppliers = useSelector((state) => state.supplier.supplierInfo);
-  const articles = useSelector((state) => state.article.articleInfo);
 
   const dispatch = useDispatch();
 
@@ -65,15 +61,6 @@ export const POForm = (props) => {
   const [selectedArticle, setSelectedArticle] = useState(
     Array(tableRowData.length).fill({})
   );
-
-  const descriptions = tableRowData.map((item) => item.description);
-  const brands = tableRowData.map((item) => item.brand);
-  const models = tableRowData.map((item) => item.model);
-  const serialNumbers = tableRowData.map((item) => item.serialNumber);
-  const units = tableRowData.map((item) => item.unit);
-  const quantities = tableRowData.map((item) => item.quantity);
-  const unitCosts = tableRowData.map((item) => item.unitCost);
-  const amounts = tableRowData.map((item) => item.amount);
 
   const [showSupplierModal, setShowSupplierModal] = useState(false);
   const [showArticleModal, setShowArticleModal] = useState(false);
@@ -170,10 +157,11 @@ export const POForm = (props) => {
       tableRowData: [],
     });
 
-    tableRowData.forEach((row) => {
-      Axios.post("http://localhost:3000/api/postTableRowData", {
+    const promises = tableRowData.map((row, index) => {
+      return Axios.post("http://localhost:3000/api/postTableRowData", {
+        tableKey: row.key,
         poNumber: poValues.poNumber,
-        articleId: selectedArticle.articleId,
+        articleId: selectedArticle[index].articleId, // Access the articleId for the current row
         description: row.description,
         brand: row.brand,
         model: row.model,
@@ -182,10 +170,16 @@ export const POForm = (props) => {
         quantity: row.quantity,
         unitCost: row.unitCost,
         amount: row.amount,
-      }).then(() => {
-        alert("Data from table added succesfully!");
       });
     });
+
+    Promise.all(promises)
+      .then(() => {
+        alert("Data from table added successfully!");
+      })
+      .catch((error) => {
+        console.error("Error adding data to the table:", error);
+      });
 
     Axios.post("http://localhost:3000/api/postPO", {
       poNumber: poValues.poNumber,
@@ -194,7 +188,6 @@ export const POForm = (props) => {
       fundCluster: poValues.fundCluster,
       procMode: poValues.procMode,
       totalCost: poValues.totalCost,
-      // articleId: poValues.articleId.push(articles.articleId),
     }).then(() => {
       alert("PO added succesfully!");
     });

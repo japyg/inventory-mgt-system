@@ -73,14 +73,13 @@ app.post("/api/postPO", (req, res) => {
   const fundCluster = req.body.fundCluster;
   const procMode = req.body.procMode;
   const totalCost = req.body.totalCost;
-  const articleId = req.body.articleId;
 
   const PoInsert =
-    "INSERT INTO sql_office.purchase_orders (poNumber, supplierId,  poDate, fundCluster, procMode, totalCost, articleId) VALUES (?,?,?,?,?,?,?)";
+    "INSERT INTO sql_office.purchase_orders (poNumber, supplierId,  poDate, fundCluster, procMode, totalCost) VALUES (?,?,?,?,?,?)";
 
   db.query(
     PoInsert,
-    [poNumber, supplierId, poDate, fundCluster, procMode, totalCost, articleId],
+    [poNumber, supplierId, poDate, fundCluster, procMode, totalCost],
     (err, result) => {
       console.log(err);
     }
@@ -88,6 +87,7 @@ app.post("/api/postPO", (req, res) => {
 });
 
 app.post("/api/postTableRowData", (req, res) => {
+  const tableKey = req.body.tableKey;
   const poNumber = req.body.poNumber;
   const articleId = req.body.articleId;
   const description = req.body.description;
@@ -100,11 +100,12 @@ app.post("/api/postTableRowData", (req, res) => {
   const amount = req.body.amount;
 
   const tableRowDataInsert =
-    "INSERT INTO sql_office.po_tablerow_inventory (poNumber, articleId, description, brand, model, serialNumber, unit, quantity, unitCost, amount) VALUES (?,?,?,?,?,?,?,?,?,?)";
+    "INSERT INTO sql_office.po_tablerow_inventory (tableKey, poNumber, articleId, description, brand, model, serialNumber, unit, quantity, unitCost, amount) VALUES (?, ?,?,?,?,?,?,?,?,?,?)";
 
   db.query(
     tableRowDataInsert,
     [
+      tableKey,
       poNumber,
       articleId,
       description,
