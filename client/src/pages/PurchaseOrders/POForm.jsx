@@ -30,6 +30,9 @@ export const POForm = (props) => {
     },
   ]);
 
+  const [maxTableKey, setMaxTableKey] = useState(0);
+  console.log(maxTableKey);
+
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -96,6 +99,18 @@ export const POForm = (props) => {
     dispatch(fetchArticles());
   }, [dispatch]);
 
+  useEffect(() => {
+    // Fetch the maximum tableKey value
+    Axios.get("http://localhost:3000/api/getMaxTableKey")
+      .then((response) => {
+        const { maxTableKey } = response.data;
+        setMaxTableKey(Number(maxTableKey));
+      })
+      .catch((error) => {
+        console.error("Error fetching maxTableKey:", error);
+      });
+  }, []);
+
   const formatPoNum = (poNum) => {
     poNum = poNum.replace(/-/g, ""); // Remove existing dashes
     if (poNum.length > 4) poNum = poNum.slice(0, 4) + "-" + poNum.slice(4);
@@ -156,9 +171,12 @@ export const POForm = (props) => {
       totalCost: 0.0,
       tableRowData: [],
     });
+    const newMaxTableKey = maxTableKey + 1;
+    // setMaxTableKey(newMaxTableKey);
 
     const promises = tableRowData.map((row, index) => {
-      const tableKey = tableRowData.length + index;
+      const tableKey = newMaxTableKey - tableRowData.length + index + 1;
+
       return Axios.post("http://localhost:3000/api/postTableRowData", {
         tableKey: tableKey,
         poNumber: poValues.poNumber,
@@ -364,6 +382,8 @@ export const POForm = (props) => {
             setTableRowData={setTableRowData}
             selectedArticle={selectedArticle}
             setSelectedArticle={setSelectedArticle}
+            maxTableKey={maxTableKey}
+            setMaxTableKey={setMaxTableKey}
           />
         </div>
 

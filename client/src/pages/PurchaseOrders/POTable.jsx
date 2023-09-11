@@ -7,15 +7,35 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { fetchPurchaseOrders } from "./POSlice";
+import { fetchSuppliers } from "../Suppliers/SupplierSlice";
 
 export const POTable = () => {
   const poData = useSelector((state) => state.purchaseOrder.purchaseOrderData);
-
+  const suppliers = useSelector((state) => state.supplier.supplierInfo);
+  const suppliersLoading = useSelector((state) => state.supplier.loading);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchSuppliers());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchPurchaseOrders());
   }, [dispatch]);
+
+  const transformedPoData = useMemo(() => {
+    // Create a mapping from supplierId to supplierName
+    const supplierMapping = {};
+    suppliers.forEach((supplier) => {
+      supplierMapping[supplier.supplierId] = supplier.supplierName;
+    });
+
+    // Transform poData, replacing supplierId with supplierName
+    return poData.map((po) => ({
+      ...po,
+      supplierName: supplierMapping[po.supplierId],
+    }));
+  }, [poData, suppliers]);
 
   const columns = [
     {
@@ -46,7 +66,7 @@ export const POTable = () => {
   ];
 
   const table = useReactTable({
-    data: poData,
+    data: transformedPoData,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });

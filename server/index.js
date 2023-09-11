@@ -39,6 +39,37 @@ app.get("/api/getTableRowData", (req, res) => {
   db.query(selectTableRowData, (err, result) => res.send(result));
 });
 
+app.get("/api/countRows", (req, res) => {
+  const countRowsQuery =
+    "SELECT COUNT(*) AS rowCount FROM sql_office.po_tablerow_inventory";
+  db.query(countRowsQuery, (err, result) => {
+    if (err) {
+      console.error("Error counting rows:", err);
+      res.status(500).json({ error: "Internal server error" });
+      return;
+    }
+
+    const rowCount = result[0].rowCount;
+    res.json({ rowCount });
+  });
+});
+
+app.get("/api/getMaxTableKey", (req, res) => {
+  const getMaxTableKeyQuery =
+    "SELECT MAX(tableKey) AS maxTableKey FROM sql_office.po_tablerow_inventory";
+
+  db.query(getMaxTableKeyQuery, (err, result) => {
+    if (err) {
+      console.error("Error fetching maxTableKey:", err);
+      res.status(500).json({ error: "Internal server error" });
+      return;
+    }
+
+    const maxTableKey = result[0].maxTableKey || 0;
+    res.json({ maxTableKey });
+  });
+});
+
 app.post("/api/postSupplier", (req, res) => {
   const supplierId = req.body.supplierId;
   const supplierName = req.body.supplierName;
@@ -75,7 +106,7 @@ app.post("/api/postPO", (req, res) => {
   const totalCost = req.body.totalCost;
 
   const PoInsert =
-    "INSERT INTO sql_office.purchase_orders (poNumber, supplierId,  poDate, fundCluster, procMode, totalCost) VALUES (?,?,?,?,?,?)";
+    "INSERT INTO sql_office.purchase_orders (poNumber, supplierId, poDate, fundCluster, procMode, totalCost) VALUES (?,?,?,?,?,?)";
 
   db.query(
     PoInsert,

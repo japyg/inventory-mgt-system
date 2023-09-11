@@ -30,7 +30,9 @@ export const InputTable = (props) => {
   //<---HANDLER FUNCTIONS--->
   const handleAddRow = (event, newRowData) => {
     event.preventDefault();
+    const newTableKey = props.maxTableKey + 1;
     const newRow = {
+      tableKey: newTableKey,
       key: generateKey,
       index: generateKey,
       article: "",
@@ -45,6 +47,7 @@ export const InputTable = (props) => {
     };
     props.setTableRowData([...props.tableRowData, newRow]);
     setArticleSearchQuery([...articleSearchQuery, ""]);
+    props.setMaxTableKey(newTableKey);
   };
 
   const handleDeleteRow = (indexToDelete) => {
