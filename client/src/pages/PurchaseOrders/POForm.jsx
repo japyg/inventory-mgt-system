@@ -31,7 +31,6 @@ export const POForm = (props) => {
   ]);
 
   const [maxTableKey, setMaxTableKey] = useState(0);
-  console.log(maxTableKey);
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -156,6 +155,7 @@ export const POForm = (props) => {
     dispatch(
       addPurchaseOrder({
         poNumber: poValues.poNumber,
+        supplierId: selectedSupplier.supplierId,
         poDate: poValues.poDate,
         fundCluster: poValues.fundCluster,
         procMode: poValues.procMode,
@@ -172,7 +172,6 @@ export const POForm = (props) => {
       tableRowData: [],
     });
     const newMaxTableKey = maxTableKey + 1;
-    // setMaxTableKey(newMaxTableKey);
 
     const promises = tableRowData.map((row, index) => {
       const tableKey = newMaxTableKey - tableRowData.length + index + 1;

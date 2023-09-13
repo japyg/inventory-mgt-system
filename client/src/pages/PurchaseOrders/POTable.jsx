@@ -12,7 +12,6 @@ import { fetchSuppliers } from "../Suppliers/SupplierSlice";
 export const POTable = () => {
   const poData = useSelector((state) => state.purchaseOrder.purchaseOrderData);
   const suppliers = useSelector((state) => state.supplier.supplierInfo);
-  const suppliersLoading = useSelector((state) => state.supplier.loading);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,7 +34,7 @@ export const POTable = () => {
       ...po,
       supplierName: supplierMapping[po.supplierId],
     }));
-  }, [poData, suppliers]);
+  }, [suppliers, poData]);
 
   const columns = [
     {

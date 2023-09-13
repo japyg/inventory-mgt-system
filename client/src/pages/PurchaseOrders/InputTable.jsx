@@ -8,16 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 export const InputTable = (props) => {
   const dispatch = useDispatch();
   //<---STATES--->
-  const tableData = useSelector((state) => state.tableRowData.tableRowDataInfo);
 
   const [editingRowIndex, setEditingRowIndex] = useState(-1);
   const [openArticleDropdown, setOpenArticleDropdown] = useState(
     Array(props.tableRowData.length).fill(false)
   );
 
-  // const [selectedArticle, setSelectedArticle] = useState(
-  //   Array(props.tableRowData.length).fill({})
-  // );
   const [articleSearchQuery, setArticleSearchQuery] = useState(
     Array(props.tableRowData.length).fill("")
   );
