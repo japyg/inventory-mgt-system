@@ -33,6 +33,14 @@ export const POTable = () => {
     return poData.map((po) => ({
       ...po,
       supplierName: supplierMapping[po.supplierId],
+      poDateFormatted:
+        po.poDate instanceof Date
+          ? po.poDate.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            })
+          : "Invalid Date",
     }));
   }, [suppliers, poData]);
 
@@ -43,7 +51,7 @@ export const POTable = () => {
     },
     {
       header: "PO Date",
-      accessorKey: "poDate",
+      accessorKey: "poDateFormatted",
     },
     {
       header: "Supplier Name",
@@ -79,7 +87,7 @@ export const POTable = () => {
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="border-b border-blue-100 bg-blue-50 p-4 leading-none "
+                  className="border-b border-blue-100 bg-blue-50 p-4 leading-none z-0 "
                 >
                   {flexRender(
                     header.column.columnDef.header,

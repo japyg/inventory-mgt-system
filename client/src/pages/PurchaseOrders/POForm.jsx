@@ -11,6 +11,9 @@ import { addPurchaseOrder } from "./POSlice";
 import Axios from "axios";
 import { InputTable } from "./InputTable";
 import { addTableRowData } from "./TableRowSlice";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { format, parseISO } from "date-fns";
 
 export const POForm = (props) => {
   //PO Form States
@@ -32,26 +35,37 @@ export const POForm = (props) => {
 
   const [maxTableKey, setMaxTableKey] = useState(0);
 
-  const getCurrentDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0"); // Add 1 because months are 0-indexed
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
+  // const getCurrentDate = () => {
+  //   const today = new Date();
+  //   const year = today.getFullYear();
+  //   const month = String(today.getMonth() + 1).padStart(2, "0"); // Add 1 because months are 0-indexed
+  //   const day = String(today.getDate()).padStart(2, "0");
+  //   return `${month}-${day}-${year}`;
+  // };
 
   const [poValues, setPoValues] = useState({
     poNumber: "",
     supplierName: "",
     supplierAddress: "",
     supplierTin: "",
-    poDate: getCurrentDate(),
+    poDate: "",
     fundCluster: "fund101",
     procMode: "shopping",
     unit: "",
     totalCost: 0,
     articleId: [],
   });
+
+  // const formattedDate =
+  //   poValues.poDate instanceof Date
+  //     ? poValues.poDate.toLocaleDateString("en-US", {
+  //         year: "numeric",
+  //         month: "2-digit",
+  //         day: "2-digit",
+  //       })
+  //     : "Invalid Date";
+
+  // console.log(poValues);
 
   const suppliers = useSelector((state) => state.supplier.supplierInfo);
 
@@ -115,6 +129,22 @@ export const POForm = (props) => {
     if (poNum.length > 4) poNum = poNum.slice(0, 4) + "-" + poNum.slice(4);
     if (poNum.length > 7) poNum = poNum.slice(0, 7) + "-" + poNum.slice(7);
     return poNum;
+  };
+
+  const handleDateChange = (date) => {
+    // Convert the selected date to "MM-dd-yyyy" format
+    // const formattedDate =
+    //   date instanceof Date
+    //     ? date.toLocaleDateString("en-US", {
+    //         year: "numeric",
+    //         month: "2-digit",
+    //         day: "2-digit",
+    //       })
+    //     : "Invalid Date";
+    const formattedDate = format(date, "MM-dd-yyyy");
+    console.log(formattedDate);
+    // Set the formatted date in your state
+    setPoValues({ ...poValues, poDate: formattedDate });
   };
 
   const handleInputChange = (e) => {
@@ -315,9 +345,9 @@ export const POForm = (props) => {
               value={selectedSupplier?.supplierTin || ""}
             />
           </div>
-          <div className="flex-wrap w-48">
+          <div className="flex-wrap w-48 z-20">
             <label>PO Date</label>
-            <input
+            {/* <input
               type="date"
               className="border-2"
               id="poDate"
@@ -325,6 +355,12 @@ export const POForm = (props) => {
               onChange={(e) =>
                 setPoValues({ ...poValues, poDate: e.target.value })
               }
+            /> */}
+            <DatePicker
+              className="border-2"
+              onChange={handleDateChange}
+              selected={poValues.poDate}
+              showYearDropdown
             />
           </div>
           <div className="flex-wrap w-48">
