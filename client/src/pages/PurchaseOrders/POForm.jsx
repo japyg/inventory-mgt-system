@@ -13,7 +13,6 @@ import { InputTable } from "./InputTable";
 import { addTableRowData } from "./TableRowSlice";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { format, parseISO } from "date-fns";
 
 export const POForm = (props) => {
   //PO Form States
@@ -55,17 +54,6 @@ export const POForm = (props) => {
     totalCost: 0,
     articleId: [],
   });
-
-  // const formattedDate =
-  //   poValues.poDate instanceof Date
-  //     ? poValues.poDate.toLocaleDateString("en-US", {
-  //         year: "numeric",
-  //         month: "2-digit",
-  //         day: "2-digit",
-  //       })
-  //     : "Invalid Date";
-
-  // console.log(poValues);
 
   const suppliers = useSelector((state) => state.supplier.supplierInfo);
 
@@ -132,19 +120,18 @@ export const POForm = (props) => {
   };
 
   const handleDateChange = (date) => {
-    // Convert the selected date to "MM-dd-yyyy" format
-    // const formattedDate =
-    //   date instanceof Date
-    //     ? date.toLocaleDateString("en-US", {
-    //         year: "numeric",
-    //         month: "2-digit",
-    //         day: "2-digit",
-    //       })
-    //     : "Invalid Date";
-    const formattedDate = format(date, "MM-dd-yyyy");
-    console.log(formattedDate);
-    // Set the formatted date in your state
-    setPoValues({ ...poValues, poDate: formattedDate });
+    if (date instanceof Date) {
+      const formattedDate = `${(date.getMonth() + 1)
+        .toString()
+        .padStart(2, "0")}-${date
+        .getDate()
+        .toString()
+        .padStart(2, "0")}-${date.getFullYear()}`;
+      console.log(formattedDate);
+      setPoValues({ ...poValues, poDate: formattedDate });
+    } else {
+      console.error("Invalid Date:", date);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -229,10 +216,12 @@ export const POForm = (props) => {
         console.error("Error adding data to the table:", error);
       });
 
+    const formattedDate = poValues.poDate.toISOString().split("T")[0];
+
     Axios.post("http://localhost:3000/api/postPO", {
       poNumber: poValues.poNumber,
       supplierId: selectedSupplier.supplierId,
-      poDate: poValues.poDate,
+      poDate: formattedDate,
       fundCluster: poValues.fundCluster,
       procMode: poValues.procMode,
       totalCost: poValues.totalCost,
@@ -347,15 +336,7 @@ export const POForm = (props) => {
           </div>
           <div className="flex-wrap w-48 z-20">
             <label>PO Date</label>
-            {/* <input
-              type="date"
-              className="border-2"
-              id="poDate"
-              value={poValues.poDate || getCurrentDate()}
-              onChange={(e) =>
-                setPoValues({ ...poValues, poDate: e.target.value })
-              }
-            /> */}
+
             <DatePicker
               className="border-2"
               onChange={handleDateChange}
